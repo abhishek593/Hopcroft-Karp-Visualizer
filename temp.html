@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta charset="utf-8">
+    <meta name="description" content="This applet demonstrates the Hopcroft-Karp Algorithm" />
+    <meta name="keywords" content="Hopcroft-Karp, maximal Matching, Algorithmu, TUM, Technische Universität München, Applet">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="author" content="Ruslan Zabrodin">
+
+    <link rel="alternate" hreflang="de" href="index_de.html" />
+
+<!--     the whole page layout style -->
+    <link rel="stylesheet" type="text/css" href="../library/css/style.css" />
+
+    <link rel="stylesheet" type="text/css" href="../library/css/tum-theme2/jquery-ui-1.10.1.custom.min.css" />
+ <!--   <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css"> -->
+
+ <!--     MathJax, used in the more tab in pseudocode -->
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            showMathMenu: false,
+            showMathMenuMSIE: false
+        });
+    </script>
+
+<!-- LOCAL -->
+    <script src="../library/js/jquery-1.9.1.min.js" type="text/javascript"></script>
+    <script src="../library/js/jquery-ui-1.10.1.custom.min.js" type="text/javascript"></script>
+    <link type="text/css" href="../library/css/mmenu/jquery.mmenu.all.css" rel="stylesheet" />
+    <script type="text/javascript" src="../library/js/mmenu/jquery.mmenu.min.all.js"></script>
+    <script type="text/javascript" src="../library/js/mathjax/MathJax.js?config=TeX-AMS-MML_SVG.js&locale=en"></script>
+    <script src="../library/js/d3.js"></script>
+
+    <script src="../library/js/lang.js" type="text/javascript"></script>
+
+<!-- Adrians d3 related library code -->
+    <script src="js/Graph.js"></script>
+    <script src="js/GraphDrawer.js"></script>
+    <script src="js/GraphEditor.js"></script>
+    <script src="js/Logger.js"></script>
+    <script src="js/Tab.js"></script>
+    <script src="js/AlgorithmTab.js"></script>
+    <script src="js/GraphEditorTab.js"></script>
+    <script src="js/ExerciseTab1.js"></script>
+    <script src="js/Exercise1.js"></script>
+    <script src="js/ExerciseTab2.js"></script>
+    <script src="js/Exercise2.js"></script>
+    <script src="js/siteAnimation.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/graph-style.css" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+
+<!-- Files used only for this applet -->
+    <script src="js/HopcroftKarp.js" type="text/javascript"></script>
+
+    <title>The Hopcroft-Karp Algorithm</title>
+</head>
+
+<body>
+    <noscript>
+        <div class="ui-widget">
+            <div class="ui-state-error ui-corner-all" style="padding: .7em;">
+                <div class="ui-icon ui-icon-alert errorIcon"></div>
+                <strong>Please activate Javascript!</strong>
+                <ul style="margin: 0px;">
+                    <li>
+                        This website needs Javascript in order to be displayed properly.
+                    </li>
+                    <li>
+                        Javascript is currently deactivated in your browser. A manual for the activation of Javascript can be found <a href="http://www.enable-javascript.com/">here</a>.
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </noscript>
+    <script>
+        $(function() {
+            LNG.setLanguage('en');
+            initializeSiteLayout(HopcroftKarp);
+        });
+        $(document).ready(function() {
+            $("#menu").mmenu({
+               "navbar": {
+                  "title": "Übersicht"
+               },
+               "offCanvas": {
+                  "zposition": "front"
+               },
+               "counters": true,
+               "slidingSubmenus": true,
+               "classes": "mm-light",
+            });
+         });
+    </script>
+    <a id="menu_link" href="#menu"></a>
+    <nav id="menu">
+        <ul>
+            <li>
+                <a style="white-space:pre-line" href="http://www-m9.ma.tum.de/Allgemeines/GraphAlgorithmenEn">
+                <img src="../library/img/logo_ohne.png" alt="Overview Graph Algorithms">
+                Graph Algorithms Landing Page</a>
+            </li>
+            <li><span>Shortest Path Algorithms</span>
+                <ul>
+                   <li><a href="../spp-dijkstra/index_en.html">Dijkstra's Algorithm</a></li>
+                   <li><a href="../spp-a-star/index_en.html">A* Algorithm</a></li>
+                   <li><a href="../spp-bellman-ford/index_en.html">Bellman-Ford Algorithm</a></li>
+                   <li><a href="../spp-floyd-warshall/index_en.html">Floyd-Warshall Algorithm</a></li>
+                   <!--<li><a href="../spprc-label-setting/index_en.html">Label-Setting Algorithm</a></li>-->
+                </ul>
+            </li>
+            <li><span>Spanning Tree Algorithms</span>
+                <ul>
+                   <li><a href="../mst-prim/index_en.html">Prim's Algorithm</a></li>
+                   <li><a href="../mst-kruskal/index_en.html">Kruskal's Algorithm</a></li>
+                </ul>
+            </li>
+            <li><span>Flow Algorithms</span>
+                <ul>
+                   <li><a href="../flow-ford-fulkerson/index_en.html">Ford-Fulkerson Algorithm</a></li>
+                   <li><a href="../flow-cycle-cancelling/index_en.html">Cycle-Cancelling Algorithm</a></li>
+                   <!--<li><a href="../flow-push-relabel/index_en.html">Push-Relabel Algorithm</a></li>-->
+                </ul>
+            </li>
+            <li><span>Matching Algorithms</span>
+                <ul>
+                   <li class="Selected"><a href="../matchings-hopcroft-karp/index_en.html">Hopcroft-Karp Algorithm</a></li>
+                   <li><a href="../matchings-hungarian-method/index_en.html">Hungarian Method</a></li>
+                   <li><a href="../matchings-blossom-algorithm/index_en.html">Blossom Algorithm</a></li> 
+                </ul>
+            </li>
+            <li><span>Euler Tours and Chinese Postman Problem</span>
+                <ul>
+                   <li><a href="../hierholzer/index_en.html">Hierholzer's Algorithm</a></li>
+                   <li><a href="../directed-chinese-postman/index_en.html">Chinese Postman Problem</a></li>
+                </ul>             
+            </li>
+        </ul>
+    </nav>
+    <div>
+
+    <header>
+        <img src="img/titel_en.png" alt="Matching in bipartite graphs: The Hopcroft-Karp algorithm">
+        <!--<img src="img/hk.png" alt="Matching in bipartiten Graphen: Der Hopcroft-Karp-Algorithmus">-->
+        <img style="position:absolute; right:0px" src="../library/img/TUMLogo.png" alt="Technische Universität München">
+    </header>
+
+    <div id="tabs">
+        <ul>
+            <li><a href="#tab_te"><span>Introduction</span></a></li>
+            <li><a href="#tab_tg"><span>Create a Graph</span></a></li>
+            <li><a href="#tab_ta"><span>Run the algorithm</span></a></li>
+            <li><a href="#tab_ti"><span>Description of the algorithm</span></a></li>
+            <li><a href="#tab_tf1"><span>Exercise 1</span></a></li>
+            <li><a href="#tab_tf2"><span>Exercise 2</span></a></li>
+            <li><a href="#tab_tw"><span>More</span></a></li>
+        </ul>
+
+        <!-- TAB Einführung -->
+        <div id="tab_te">
+            <div id="te_div_Einfuehrungstext">
+                <div id="te_div_beispiel1Container"><img id="te_img_beispiel1" src="img/bipartite_graph.png" alt="Bipartiter Graph"><p>How big is the maximal matching?</p></div>
+                <h1>Bipartite Matching</h1>
+                <p>
+                    One possible application for the bipartite matching problem is allocating students to available jobs. The problem can be modeled using a bipartite graph:
+                    The students and jobs are represented by two disjunct sets of vertices. Edges represent possible assignments (based on qualifications etc).
+                    The goal is to find as many valid assignments as possible, such that each student can only take one job and each job can only be performed by a single student.
+                </p>
+                <p>
+                    Let \( G=(V,E)\) be a given undirected graph. A subset \(M \subseteq E\) is called a matching, if no two edges in M share a node.
+                    A matching M is called maximal, if the cardinality of M is maximal amongst that of all matchings.
+                    In many real world problems, elements from multiple classes have to be assigned to one another.
+                    Whenever there are exactly two such classes, the problem is called <strong>bipartite matching</strong>.
+                </p>
+                <h2>Here we demonstrate the Hopcroft-Karp algorithm that solves the problem of finding maximal matchings on bipartite graphs.</h2>
+                <div id ="te_div_Entscheidung">
+                    <h2>What do you want to do first?</h2>
+                    <button id="te_button_gotoDrawGraph">Test the algorithm!</button> <button id="te_button_gotoIdee">Read detailed description of the algorithm</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB Graph Erstellen -->
+        <div id="tab_tg">
+            <div>
+                <div class="canvasWrapper">
+                    <div class="svgContainer"><svg class="graphCanvas" id="tg_canvas_graph" width="700" height="500"></svg></div>
+                    <a class="svgDownloader" download="graph-editor.svg" href="data:text/plain,test">SVG Download</a>
+                    <div class="Legende" id="tg_div_Legende">
+                        <h2 class="LegendeHeader"><button class="LegendeMin"></button> Legend</h2>
+                        <div class="LegendeText">
+                            <table>
+                                <tr>
+                                    <td class="LegendeTabelle"><img src="img/knoten.png" alt="Knoten" class="LegendeIcon"></td>
+                                    <td><span>Node</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="LegendeTabelle"><img src="img/kante.png" alt="Knoten" class="LegendeIcon"></td>
+                                    <td><span>Edge</span></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="LegendeMinimized">
+                        <h2 class="LegendeHeader"><button class="LegendeMin"></button> Legend</h2>
+                    </div>
+                </div>
+                <div id="tg_div_statusWindow" class="statusWindow">
+                    <h2>Which graph do you want to execute the algorithm on?</h2>
+                    <h3>Start with an example graph:</h3>
+                    <label for="graphSelector">Select </label>
+<!-- add own graph examples here: -->
+                    <select name="graphSelector" id="tg_select_GraphSelector">
+                        <option selected = true label="Standard Example">Standard Example</option>
+                        <option label="Complete Graph">Complete Graph</option>
+                        <option label="Different Set Sizes">Different Set Sizes</option>
+                        <option label="Random Graph">Random Graph</option>
+                    </select>
+
+                    <h3>Modify it to your desire:<br></h3>
+                    <div id="tg_div_statusErklaerung">
+                    <ul>
+                        <li>The graph consists of two sets of vertices and edges between these sets.</li>
+                        <li>To create a vertex in one of the sets, double click in the area of that set. You can create up to 8 nodes in each of the sets.</li>
+                        <li>To create an edge, first click on the desired origin node and then on the desired destination node.</li>
+                        <li>You can only create edges that run from one vertex-set to another.</li>
+                        <li>Right clicking will delete vertices and edges.</li>
+                    </ul>
+                    </div>
+                    
+                    <h3>Download the modified graph:</h3>
+                    
+                    <a id="fileDownloader" download="graph.txt" href="data:text/plain,test">Download</a>
+                    
+                    <h3>Upload an existing graph:</h3>
+                    <input type="file" id="fileUploader" accept=".txt"/></input>
+                    <div id="ta_div_parseError" title="Error reading graph from file">
+                        A
+                        <h2 style="color:red" id="ta_div_parseErrorText"></h2>
+                        occured when reading from file:
+                        <h3 id="ta_div_parseErrorFilename"></h3>
+                        the contents:
+                        <pre id="ta_div_parseErrorDescription"></pre>
+                    </div>
+
+                    <h3>What next?</h3>
+                   <p><button id="tg_button_gotoAlgorithmTab">Ready &ndash; Run the Algorithm!</button></p>
+
+
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB Algorithmus ausführen -->
+       <div id="tab_ta">
+            <div>
+                <div class="canvasWrapper">
+                    <div class="svgContainer">
+                    <svg class="graphCanvas" id="ta_canvas_graph" width="700" height="450"></svg>
+                    </div>
+                    <a class="svgDownloader" download="graph-algorithm.svg" href="data:text/plain,test">SVG Download</a>
+                    <div class="Legende">
+                        <h2 class="LegendeHeader"><button class="LegendeMin"></button> Legend</h2>
+                        <div class="LegendeText">
+                             <table>
+                                <tr>
+                                    <td class="LegendeTabelle"><img src="img/matchingKnoten.png" alt="MatchedNode" class="LegendeIcon"></td>
+                                    <td><span>matched vertex</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="LegendeTabelle"><img src="img/matchingEdge.png" alt="Knoten" class="LegendeIcon"></td>
+                                    <td><span>matching edge</span></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="LegendeMinimized">
+                        <h2 class="LegendeHeader"><button class="LegendeMin"></button> Legend</h2>
+                    </div>
+                </div>
+                <div id="ta_div_statusWindow" class="statusWindow">
+                    <h2 class="">Current state of the algorithm</h2>
+                    <div id="ta_div_abspielbuttons"> <!--class="ui-widget-header ui-corner-all"-->
+                        <input  id="ta_button_rewind" type="checkbox"><label for="ta_button_rewind" id="ta_button_text_rewind">rewind</label>
+                        
+                        <button id="ta_button_Zurueck">prev</button>
+                        
+                        <button id="ta_button_1Schritt">next</button>
+                        
+                        <input  id="ta_button_vorspulen" type="checkbox"><label for="ta_button_vorspulen" id="ta_button_text_fastforward">fast forward</label>
+
+                        <!-- <input type="number" id="ta_vorspulen_speed" min="2" max="500" value=5>ms -->
+
+                        <span id="ta_button_text_pause" style="display:none">pause</span>
+                    </div>
+                    <div id="ta_div_statusTabs">
+                         <ul>
+                            <li><a href="#ta_div_statusErklaerung">Explanation</a></li>
+                            <li><a href="#ta_div_statusPseudocode">Pseudocode</a></li>
+                            <!--<li><a href="#ta_div_statusLogger">Log</a></li>-->
+                        </ul>
+                        <div id="ta_div_statusErklaerung">
+                            <h3>Initialization of the algorithm.</h3>
+                            <p>In the beginning, no vertex has a matching partner. Thus, the matching is empty.</p>
+                            <p>In each iteration, we look for an inclusion-maximal set of shortest vertex-disjunct augmenting paths.</p>
+                            <p>An augmenting path is a path that starts in an unmatched node, ends in an unmatched node and alternates between edges outside of and inside the matching.</p>
+                            <p>Inclusion-maximal means that no other path can be added to the set, such that the paths found stay vertex-disjunct (i.e. don't share any vertices).</p>
+                            <p>When no further augmenting paths can be found, the current matching is optimal and the algorithm terminates..</p>
+                        </div>
+                        <div class="PseudocodeWrapper" id="ta_div_statusPseudocode">
+                            <p class="pseudocode" id="ta_p_begin">BEGIN</p>
+                            <p class="pseudocode" id="ta_p_l2">  M := &empty;</p>
+                            <p class="pseudocode" id="ta_p_l3">  REPEAT </p>
+                            <p class="pseudocode" id="ta_p_l4">    l := Length of the shortest</p>
+                            <p class="pseudocode" id="ta_p_l5">             augmenting path </p>
+                            <p class="pseudocode" id="ta_p_l6">    &Rho; := {P1,...,Pk} inklusion-maximal</p>
+                            <p class="pseudocode" id="ta_p_l7">         set of vertex-disjunct</p>
+                            <p class="pseudocode" id="ta_p_l8">         augmenting paths of lenght l</p>
+                            <p class="pseudocode" id="ta_p_l9">    M := M &oplus; (P1 &cup; P2 &cup; ... &cup; Pk)</p>
+                            <p class="pseudocode" id="ta_p_20">  UNTIL &Rho; = &empty;</p>
+                            <p class="pseudocode" id="ta_p_return">RETURN M</p>
+                            <p class="pseudocode" id="ta_p_end">END</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="ta_div_confirmTabChange" title="Terminate Execution?" class="tabChangeWarningDialog">
+                <h2>If you switch tabs, the execution will be terminated.</h2>
+                <p>You can open <a href="#" target="_blank" tabindex="-1">another browser window</a> to read the description in parallel.</p>
+            </div>
+        </div>
+
+        <!-- TAB Beschreibung des Algorithmus -->
+        <div id="tab_ti" style="display: none;">
+            <div id="ti_div_Einfuehrungstext">
+                <div class="BeispielbildContainer">
+                    <img id="ti_img_0" src="img/matching.png" alt="Suche" width="300"/><p>Figure 1<br> Matching in a bipartite graph</p><br />
+                    <img id="ti_img_1" src="img/augmentation.png" alt="Suche" width="250"/><p>Figure 2<br> Simple graph with an augmenting path.<br> On the left, an augmenting path has been highlightet.
+                    On the right, you see the graph after the augmentation.</p><br />
+                    <img id="ti_img_3" src="img/dfs.png" alt="Suche" height="500"/><p>Figure 3<br> Graph with its corresponding layered graph.<br> The vertex-disjunct augmenting paths are highlighted in the layered graph. </p><br>
+                    <img id="ti_img_4" src="img/disjoint.png" alt="Suche" height="180"/><p>Figure 4<br> The gray vertices are already included in other shortest augmenting paths in this iteration.
+                    The highlighted agumentation path is vertex-disjunct to all of the gray nodes that are already in use.</p><br>
+                </div>
+                <h1>Matching on bipartite Graphs</h1>
+                <p>
+                    Numerous allocation problems can be modeled as bipartite matching problems.
+                    A simple example is the matching of students to open job positions. Not every assignment is possible as students will differ in their qualifications.
+                    The problem can be made easier to grasp if you consider the students to be a set of vertices and the jobs as another set of vertices.
+                    The edges between these sets will then represent all valid assignments of a student to a job.
+                    The goal is to find as many valid assignments as possible, while each student may only take one job and each job can be assigned to only a single student.
+                </p>
+                <p>
+                    Let \(G=(V,E)\) be a given <b>bipartite graph</b>. A graph is called bipartite if it consists of two sets of vertices U and V, such that no edges exist within these sets.
+                    A <b>matching</b> is a set of edges, such that every vertex lies on at most one of the edges in this set. Figure 1 shows a matching in a bipartite graph.
+                    The problem we investigate is to find a mathching on G with maximal cardinality (i.e. maximal number of elements).
+                </p>
+                <h1>Idea of the Algorithm</h1>
+                <p>
+                    Let M be the current matching (starting with the empty set). We will call an edge a <b>matching edge</b> if it is contained in M, and a <b>free edge</b> otherwise. In the illustrations, free and matching edges are shown in black and green, respectively.
+                    A node that lies on a matching edge is called covered (or matched). Otherwise the vertex is free. Covered nodes are shown in green, free nodes in blue.
+                    An <b>augmenting path</b> in the graph G is a path that
+                </p>
+                    <ul>
+                        <li>starts in a free node,</li>
+                        <li>ends in a free node, and</li>
+                        <li>alternates between free and matching edges.</li>
+                    </ul>
+                <p>
+                    Figure 2 illustrates an augmenting path in a graph.
+                </p>
+                <p>
+                    Consider an augmenting path. If we remove all its matching edges from M, but add all its free edges, then the cardinality of M will increase by exactly 1.
+                    All nodes on the augmenting path lie on at most one matching edge. The end nodes of the path are not part of any matching edge, therefore we get a valid matching again after augmentation.
+                    The number of free edges in any augmenting path is exactly the number of matching edges plus 1. Thus the matching will be enlarged after augmentation.
+                </p>
+                <p>
+                    A theorem in Graph Theory states the following:<br>
+                    <i>A matching M in G(V,E) is maximal (w.r.t. cardinality) iff (if and only if) no augmenting paths exist.</i> <br>
+                    A simple algorithm to find maximal matchings is thus to search for an augmenting path and increase the size of the matching along it. If no more augmenting paths can be found, the matching is optimal.
+                    However, the running time of this algorithm can be quite long in some cases.
+                </p>
+                <p>
+                    The algorithm by Hopcroft and Karp improves the runtime when compared to the simple algorithm above.
+                    In each iteration, it only considers the <b>shortest augmenting paths</b>, and looks for a set of <b>vertex-disjunct</b> augmenting paths, i.e. no two such paths can share a node.
+                </p>
+                <p>
+                    The set of shortest vertex-disjunct augmenting paths should be <b>inclusion-maximal</b>. This means that no other augmenting path exists that is vertex-disjunct to the paths already contained in the set.
+                    After finding the inclusion-maximal set of augmenting paths, we augment the matching and start a new iteration.
+                    After each iteration, the length of the shortest augmenting path will increase. The proof for this is somewhat complicated and will be ommitted here. However, it should be intuitive that the length of augmenting paths cannot become shorter after an augmentation. If no more augmenting paths exist, the algorithm terminates.
+                </p>
+                <h1>Finding Shortest Augmenting Paths</h1>
+                <p>
+                    The shortest augmenting paths can be found using <b><a href="https://en.wikipedia.org/wiki/Breadth-first_search">Breadth-first (BFS)</a> und <a href="https://en.wikipedia.org/wiki/Depth-first_search">Depth-first search (DFS)</a></b>.
+                    We start with all free nodes in an (arbitrary) set of vertices and add these to the first layer of a layered graph, that will represent a decomposition of V into multiple layers and will be explained in more detail in the following. The layered graph will be created iteratively, until a free node has been found or all nodes have already been checked.
+                    The <b>layered graph</b> is constructed using the following procedure:
+                </p>
+                <p>
+                    Starting from the nodes of the current layer one follows all edges to neighbors that haven't been considered yet. These neighbors make up the next layer of the graph.
+                    If this new layer contains a free node, the procedure will terminate; if the layer is empty, it will terminate as well and return that no further augmenting paths exist.
+                    Otherwise the layered graph will be extended by another layer, using the matching parners of the nodes in the previous layer.
+                    This layer of matching partners then becomes the current layer and the procedure is repeated until it terminates (see above).
+                    Finally, we end up with a layered graph that contains all (and only the) shortest augmenting paths, if any such paths exist.
+                </p>
+                <p>
+                    The third figure shows a layered graph with four layers. The first layer consists of two free nodes from the vertex set above. Their neighbors are added to the second layer. Since none of the nodes in the second layer are free, a third layer is added, comprising the matching partners of the nodes in the second layer. All neighbors of this third layer that have not been considered yet are finally added to the fourth layer. As two of these vertices are free, the procedure ends after four layers.
+                </p>
+                <p>
+                    Now, we use the layered graph from the last stet to find an inclusion-maximal set of vertex-disjunct augmenting paths. We use a Depth-first search starting with the free nodes in the first layer. If there is an augmenting path starting in one of these nodes, then it will be found. All nodes that are being used in this path will be deleted from the layered graph, or highlighted.
+                    While executing the algorithm, these nodes will be marked in gray. Applying this procedure to all nodes of the first layer, the set of shortest augmenting paths found this way will be vertex-disjunct, and after termination of the procedure no other augmenting paths will exist that is vertex-disjunct with respect to those already found.
+                </p>
+                <p>
+                    In Figure three, the vertex-disjunct augmenting paths are highlighted by bold arrows. Thus, in this iteration the algorithm would augment the matching using these two augmenting paths.
+                    Afterwars a new iteration would begin and a new layered graph would be constructed.
+                </p>
+                <p>
+                    The advantage of the layered graph is that all shortest augmenting paths can be found simultaneously.
+                    In the worst case, we have to check all edges in order to specify an inclusion-maximal set of shortest, vertex-disjunct augmenting paths.
+                </p>
+                <h1>What's next?</h1>
+                <br style="clear: both;" />
+                <div class="Entscheidungsweg" id="ti_div_EntscheidungLeft">
+                    <h3>Create a graph and run the algorithm</h3>
+                    <button id="ti_button_gotoDrawGraph">Create a graph and run the algorithm on it</button>
+                    <button id="ti_button_gotoAlgorithm">Run the algorithm on a prepared graph</button>
+                </div>
+                <div class="Entscheidungsweg" id="ti_div_EntscheidungRight">
+                    <h3>Test your knowledge in the exercises</h3>
+                    <button id="ti_button_gotoFA1">Exercise 1: What would the algorithm do?</button><br>
+                    <button id="ti_button_gotoFA2">Exercise 2: Finding augmenting paths</button>
+                </div>
+                <br style="clear: both;" />
+            </div>
+        </div>
+
+        <!-- Tab Exercise 1 -->
+        <div id="tab_tf1">
+            <div>
+                <div class="canvasWrapper">
+                    <div class="svgContainer">
+                    <svg class="graphCanvas" id="tf1_canvas_graph" width="700" height="450"></svg>
+                    </div>
+                    <a class="svgDownloader" download="graph-algorithm.svg" href="data:text/plain,test">SVG Download</a>
+                    <div class="Legende">
+                        <h2 class="LegendeHeader"><button class="LegendeMin"></button> Legend</h2>
+                        <div class="LegendeText">
+                             <table>
+                                <tr>
+                                    <td class="LegendeTabelle"><img src="img/matchingKnoten.png" alt="MatchedNode" class="LegendeIcon"></td>
+                                    <td><span>matched vertex</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="LegendeTabelle"><img src="img/matchingEdge.png" alt="Knoten" class="LegendeIcon"></td>
+                                    <td><span>matching edge</span></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="LegendeMinimized">
+                        <h2 class="LegendeHeader"><button class="LegendeMin"></button> Legend</h2>
+                    </div>
+                </div>
+                <div id="tf1_div_statusWindow" class="statusWindow">
+                    <h2 class="">Test your knowledge: What would the algorithm do?</h2>
+                    <div id="tf1_div_abspielbuttons">
+                        <button id="tf1_button_1Schritt">Next Step</button>
+                        
+                        <input  id="tf1_button_vorspulen" type="checkbox"><label for="tf1_button_vorspulen" id="tf1_button_text_fastforward">Skip this question</label>
+
+                        <span id="tf1_button_text_pause" style="display:none">Pause</span>
+                    </div>
+                    <div id="tf1_div_questionModal" class="ui-widget ui-widget-content ui-corner-all" style="display: none;">
+                    </div>
+                    <div id="tf1_div_statusTabs">
+                         <ul>
+                            <li><a href="#tf1_div_statusErklaerung">Explanation</a></li>
+                            <li><a href="#tf1_div_statusPseudocode">Pseudocode</a></li>
+                        </ul>
+                        <div id="tf1_div_statusErklaerung">
+                        </div>
+                        <div class="PseudocodeWrapper" id="tf1_div_statusPseudocode">
+                            <p class="pseudocode" id="tf1_p_begin">BEGIN</p>
+                            <p class="pseudocode" id="tf1_p_l2">  M := &empty;</p>
+                            <p class="pseudocode" id="tf1_p_l3">  REPEAT </p>
+                            <p class="pseudocode" id="tf1_p_l4">    l := length of the shortest</p>
+                            <p class="pseudocode" id="tf1_p_l5">             augmenting path </p>
+                            <p class="pseudocode" id="tf1_p_l6">    &Rho; := {P1,...,Pk} inclusion-maximal</p>
+                            <p class="pseudocode" id="tf1_p_l7">         set of vertex-disjunct</p>
+                            <p class="pseudocode" id="tf1_p_l8">         augmenting paths of length l</p>
+                            <p class="pseudocode" id="tf1_p_l9">    M := M &oplus; (P1 &cup; P2 &cup; ... &cup; Pk)</p>
+                            <p class="pseudocode" id="tf1_p_20">  UNTIL &Rho; = &empty;</p>
+                            <p class="pseudocode" id="tf1_p_return">RETURN M</p>
+                            <p class="pseudocode" id="tf1_p_end">END</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tf1_div_TabIntroDialog" title="Exercise 1" class="tabIntroDialog">
+                <h2>In this part you can test your knowledge: What would the algorithm do?</h2>
+                <p>
+                    The algorithm will be executed normally, but will stop in a few places. Then you will have to predict, what the algorithm would do next.
+                </p>
+                <p>Hint: Recall the description of the algorithm.</p>
+            </div>
+            <div id="tf1_div_confirmTabChange" title="Terminate the algorithm?" class="tabChangeWarningDialog">
+                <h2>If you switch tabs, the execution will be terminated.</h2>
+                <p>You can open <a href="#" target="_blank" tabindex="-1">another browser window</a> to read the description in parallel.</p>
+            </div>
+        </div>
+
+        <!-- Tab Exercise 2 -->
+        <div id="tab_tf2">
+            <div>
+                <div class="canvasWrapper">
+                    <div class="svgContainer">
+                    <svg class="graphCanvas" id="tf2_canvas_graph" width="700" height="450"></svg>
+                    </div>
+                    <a class="svgDownloader" download="graph-algorithm.svg" href="data:text/plain,test">SVG Download</a>
+                    <div class="Legende">
+                        <h2 class="LegendeHeader"><button class="LegendeMin"></button> Legend</h2>
+                        <div class="LegendeText">
+                             <table>
+                                <tr>
+                                    <td class="LegendeTabelle"><img src="img/matchingKnoten.png" alt="MatchedNode" class="LegendeIcon"></td>
+                                    <td><span>matched vertex</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="LegendeTabelle"><img src="img/matchingEdge.png" alt="Knoten" class="LegendeIcon"></td>
+                                    <td><span>matching edge</span></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="LegendeMinimized">
+                        <h2 class="LegendeHeader"><button class="LegendeMin"></button> Legend</h2>
+                    </div>
+                </div>
+                <div id="tf2_div_statusWindow" class="statusWindow">
+                    <h2>Try finding augmenting paths yourself</h2>
+                    <div id="tf2_div_abspielbuttons">
+                        <button id="tf2_button_1Schritt">Next Step</button>
+                    </div>
+                    <div id="tf2_div_statusErklaerung">
+                    </div>
+                </div>
+            </div>
+            <div id="tf2_div_TabIntroDialog" title="Exercise 2" class="tabIntroDialog">
+                <h2>
+                    Try finding augmenting paths yourself.
+                </h2>
+                <p>The Hopcroft-Karp algorithm uses augmenting'paths in order to find a maximal matching. In this exercise you will experiment with augmenting paths.</p>
+                <p>
+                    The algorithm will stop in some places. Then you will have to fill in an augmenting path.
+                    It is not necessary that you find the shortest augmenting path. You may choose any augmenting path you like.
+                </p>
+            </div>
+            <div id="tf2_div_confirmTabChange" title="Abort Exercise?" class="tabChangeWarningDialog">
+                <h2>Task is terminated if the tab is changed.</h2>
+                <p>You can open <a href="#" target="_blank" tabindex="-1">another browser window</a> for reading the description in parallel.</p>
+            </div>
+        </div>
+
+       
+        <!-- TAB Weiteres -->
+        <div id="tab_tw" style="display: none;">
+            <div id="tw_Accordion">
+                <h3>What's the (Pseudo-)Code of the algorithm?</h3>
+                <div><pre><code>
+                Input: Bipartite unweighted Graph G=(U &cup; V, E)
+                Output: Matching M &sube; E
+                    BEGIN
+                      M := &empty;
+                      REPEAT
+                        l := length of the shortest augmenting paths
+                        &Rho; := {P1,...,Pk} inklusion-maximal set of
+                             vertex-dijunct augmenting pathsl of length l
+                        M := M &oplus; (P1 &cup; P2 &cup; ... &cup; Pk)
+                      UNTIL &Rho; = &empty;
+                      RETURN M
+                    END
+                </code></pre></div>
+                <h3>How fast is the algorithm?</h3>
+                <div>
+                    <h2>Speed of algorithms</h2>
+                    <p>The speed of an algorithm is the <strong>total number of individual steps</strong> which are performed during the execution.</p>
+                    <p>These steps are for example:</p>
+                    <ul>
+                        <li>Assignments &ndash; Set distance of a node to 20.
+                        </li>
+                        <li>Comparisons &ndash; Is 20 greater than 23?
+                        </li>
+                        <li>Comparison and assignment &ndash; If 20 is greater than 15, set variable
+                            <var>n</var>
+                            to 20
+                        </li>
+                        <li>Simple Arithmetic Operations &ndash; What is 5 + 5?
+                        </li>
+                    </ul>
+                    <p>Since it can be very difficult to count all individual steps, it is desirable to only count the approximate magnitude of the number of steps. This is also called the running time of an algorithm. Particularly, it is interesting to know the running time of an algorithm based on the size of the input (in this case the number of the vertices and the edges of the graph).</p>
+
+                    <h2>Running time of the Hopcroft-Karp algorithmus</h2>
+                    <p>
+                        Assume the graph contains n vertices and m edges.
+                        In each iteration an inclusion-maximal set of shortest node-disjunct augmenting paths is found.
+                        Let M be a matching and M* the optimal matching. Then there are \( |M^*|-|M| \) vertex-disjunct augmenting paths with respect to M. Consider the symmetric difference M* &oplus; M = M*\M &cup; M\M*.
+                        Each node can lie on at most two edges (one in M* and one in M). Then the symmetric difference only contains vertex-disjunct circles and paths. In a circle, the number of edges from M is equal to that of edges from M*.
+                        But then there must exist \( |M^*|-|M| \) vertex-disjunct alternating paths, that contain more edges from M* than from M. These are exactly the augmenting paths with respect to M.
+                    </p>
+                    <p>
+                        Let M be a matching an l the length of the shortest augmenting path with respect to M. Then the cardinality of the optimal Matchin is at most \( |M| + \frac{n}{(l+1)}\).
+                        There are \( |M^*|-|M| \) vertex-disjunct augmenting paths with respect to M.
+                        Each augmenting path has at least l+1 vertices, since the length of the shortest augmenting path is l.
+                        Then the following holds: \( (|M^*|-|M|)*(l+1) \leq n \), since the paths are vertex-disjunct and there are n nodes in the graph. Thus, \( |M^*|-|M| \leq \frac{n}{(l+1)}\)
+                        This means there are at most \( \frac{n}{(l+1)}\) possible augmentations with respect to M.
+                    </p>
+                    <p>
+                        The length of the shortest augmenting path increases in each iteration. (This won't be proven here, a proof can be found in the literate.) Intuitively, however, it should be clear, that the augmenting paths cannot become shorter.
+                        But then after \(\sqrt{n}\) iterations of the algorithm, the length of the shortest augmenting path must be at least \(\sqrt{n}\).
+                        Then there are at most \(\frac{n}{\sqrt{n}+1} \leq \sqrt{n}\) additional augmentations. In each iteration, at least one augmenting paths ist found.
+                        Then it follows, that there can be at most \(2\sqrt{n}\) iterations before the algorithm terminates.
+                    </p>
+                    <p>
+                        During execution of an interation, each edge is used a constant number of times. BFS and DFS are used, where each edge is only considered once.
+                        Furthermore, the matching is being updated. We can thus consider the processing of an edge in each iteration as a single execution step.
+                        Then every iteration can be executed in \(m\) steps. See "Description of the Algorithm" for details.<br>
+                        The <b>total running time of the algorithm</b> is then in the order of magnitude of \(m\sqrt{n}\).
+                    </p>
+                </div>
+                <h3>How can we show that the algorithm always works correctly?</h3>
+                <div>
+                    <p>
+                        In each iteration of the algorithm it looks for augmenting paths and improves the matching. Only finitely many improvements can be made, thus the algorithm will always terminate.
+                        A theorem in Graph Theory states the follwing:<br>
+                        <i>A matching M in G(V,E) is maximal by cardianality, if and only if there is no augmenting path.</i> <a href="https://en.wikipedia.org/wiki/Berge%27s_lemma" target="_blank">(Berge´s Lemma)</a><br>
+                        After the last iteration of the Hopcroft-Karp algorithm there are no more augmenting paths. Then the matching that has been found thus far must be optimal and the algorithm thus arrives at the correct result.
+                    </p>
+                </div>
+                <h3>Where can I find more information on graph algorithms??</h3>
+                <div><p>Other graph algorithms are explained on the <a href="http://www-m9.ma.tum.de/Allgemeines/GraphAlgorithmenEn">Website of Chair M9</a> of the TU München.</p>
+                <p>Furthermore there is an interesting book about shortest paths: <a href="http://www-m9.ma.tum.de/Ruth/WebHome">Das Geheimnis des kürzesten Weges</a></p>
+                <p><a href="http://www.ma.tum.de/Studium/StudieninteressierteEn">Studying mathematics at the TU München</a> answers all questions about graph theory (if an answer is known).</p>
+                </div>
+                <h3>A last remark about this page's content, goal and citations</h3>
+				<div><p>Chair M9 of Technische Universität München does research in the fields of discrete mathematics, applied geometry and the mathematical optimization of applied problems. The algorithms presented on the pages at hand are very basic examples for methods of discrete mathematics (the daily research conducted at the chair reaches far beyond that point). These pages shall provide pupils and students with the possibility to (better) understand and fully comprehend the algorithms, which are often of importance in daily life. Therefore, the presentation concentrates on the algorithms' ideas, and often explains them with just minimal or no mathematical notation at all.</p>
+                <p>Please be advised that the pages presented here have been created within the scope of student theses, supervised by Chair M9. The code and corresponding presentation could only be tested selectively, which is why we cannot guarantee the complete correctness of the pages and the implemented algorithms.</p>
+                <p>Naturally, we are looking forward to your feedback concerning the page as well as possible inaccuracies or errors. Please use the <a href="mailto&#58;m&#46;ritter&#64;ma&#46;tum&#46;de&#63;subject&#61;M9&#45;Web&#45;Feedback">suggestions link</a> also found in the footer.</p>
+				<p>To cite this page, please use the following information:</p>
+				<ul>
+				<li>Title: The Hopcroft-Karp Algorithm
+				<li>Authors: Wolfgang F. Riedl, Ruslan Zabrodin; Technische Universität München
+				<li>Link: <a href="https://www-m9.ma.tum.de/graph-algorithms/matchings-hopcroft-karp">https://www-m9.ma.tum.de/graph-algorithms/matchings-hopcroft-karp</a>
+				</ul>
+				</div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p class="Disclaimer">
+            IDP Project of Ruslan Zabrodin at Chair M9 of Technische Universität München. 2015 | <a href="index_de.html">DE</a> | <a href="http://www-m9.ma.tum.de/Allgemeines/Rechtliches">Terms of use</a> | <a href="http://www-m9.ma.tum.de/Allgemeines/Impressum">About Us</a> | <a href="mailto&#58;m&#46;ritter&#64;ma&#46;tum&#46;de&#63;subject&#61;M9&#45;Web&#45;Feedback">Suggestions</a>
+        </p>
+    </footer>
+    </div>
+</body>
