@@ -1,0 +1,45 @@
+/* for html page */
+
+.adrianheader {
+  font-size: 35px;
+  color: #1B66B0;
+  font-family: sans-serif;
+  font-weight:bold;
+  line-height:100px;
+  vertical-align: top;
+  padding: 20px;
+}
+
+div.statusWindow {
+  text-align: left;
+  overflow: hidden; 
+  max-height:1000px;
+}
+
+div.canvasWrapper {
+  position : absolute
+}
+
+a.svgDownloader {
+    position: absolute;
+    bottom: 0px;
+    left:  0px;
+}
+
+div.Legende {
+    position: absolute;
+    height: auto;
+    bottom: 0px;
+    right:  0px;
+}
+
+div.LegendeMinimized {
+    position: absolute;
+    bottom: 0px;
+    right:  0px;
+}
+
+td.algoInfoTD {
+  border-radius: 50%;
+  background-clip: content-box;
+}
