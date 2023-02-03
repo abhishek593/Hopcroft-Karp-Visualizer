@@ -3,6 +3,7 @@
  * initializes the buttons, callbacks, the logger and fast forward funcitonality
  * @author Adrian Haarbach
  * @augments AlgorithmTab
+ * @parameters algo: GraphAlgorithmConstructor, p_tab: jquery object 
  * @class
  */
 function AlgorithmTab(algo,p_tab) {

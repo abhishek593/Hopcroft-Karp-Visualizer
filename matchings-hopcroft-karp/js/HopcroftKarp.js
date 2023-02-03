@@ -22,6 +22,7 @@ function HopcroftKarp(svgSelection) {
     const UPDATE_MATCHING = 4;
     const GRAY_PATH = 5;
     const END_ALGORITHM = 6;
+    const SHOW_BFS_TREE = 7;
 
     /**
      * Enthaelt alle Kanten, die zu aktuellem Zeitpunkt zum Matching gehoeren.
@@ -188,7 +189,7 @@ function HopcroftKarp(svgSelection) {
     };
 
     this.getWarnBeforeLeave = function() {
-        return s.id != 0 && s.id != 7;
+        return s.id != 0 && s.id != 8;
     }
     
     
@@ -304,7 +305,6 @@ function HopcroftKarp(svgSelection) {
 
         // Store current state of the algorithm.
         this.addReplayStep();
-
         switch (s.id) {
             case ALGOINIT:
                 this.initialize();
@@ -324,6 +324,9 @@ function HopcroftKarp(svgSelection) {
             case GRAY_PATH:
                 this.hidePath(disjointPaths[currentPath]);
                 break;
+            case SHOW_BFS_TREE:
+                this.updateBfsTree([]);
+                break;
             case END_ALGORITHM:
                 this.endAlgorithm();
                 break;
@@ -334,6 +337,19 @@ function HopcroftKarp(svgSelection) {
 
         // update view depending on the current state
         this.update();
+    };
+
+
+    /*
+    * Updating the $$BFStree
+    * @method -- to implement
+    */
+    this.updateBfsTree = function (branches) {
+        console.log('updated the ui')
+        // work on this function
+        s.id = END_ALGORITHM;
+        $(statusErklaerung).html("<h3> "+LNG.K('textdb_msg_end_algo')+"</h3>"
+            + "<p>"+LNG.K('textdb_msg_end_algo_1')+"</p>");
     };
 
     /*
@@ -522,6 +538,7 @@ function HopcroftKarp(svgSelection) {
         disjointPaths = [];
         currentPath = 0;
         shortestPathLength = 0;
+        isShownBfsTree = false;
         // finde alle freien Knoten in der U-Partition
         var superNode = {};
         for (var n in Graph.instance.unodes) {
@@ -531,6 +548,10 @@ function HopcroftKarp(svgSelection) {
         //fuehre Breiten- und Tiefensuche aus
         bfs(superNode);
         dfs(superNode);
+
+        console.log(matching)
+        console.log(disjointPaths)
+
         //restore Layouts 
         Graph.instance.nodes.forEach( function(nodeID, node) {
             if(that.isMatched(node)) setNodeMatched(node);
@@ -551,7 +572,12 @@ function HopcroftKarp(svgSelection) {
                 + "<p>"+LNG.K('textdb_msg_begin_it_2')+"<p>"
                 + "<p>"+LNG.K('textdb_msg_begin_it_3')+"<p>");
         }
-        else{
+        else if (isShownBfsTree === false) {
+            isShownBfsTree = true;
+            s.id = SHOW_BFS_TREE;
+            console.log('show bfs tree in this step', s.id)
+        } 
+        else {
             s.id = END_ALGORITHM;
             $(statusErklaerung).html("<h3> "+LNG.K('textdb_msg_end_algo')+"</h3>"
                 + "<p>"+LNG.K('textdb_msg_end_algo_1')+"</p>");
@@ -697,19 +723,13 @@ function HopcroftKarp(svgSelection) {
         $(statusErklaerung).append("<p></p><h3>"+LNG.K('algorithm_msg_finish')+"</h3>");
         $(statusErklaerung).append("<button id=button_gotoIdee>"+LNG.K('algorithm_btn_more')+"</button>");
         $(statusErklaerung).append("<h3>"+LNG.K('algorithm_msg_test')+"</h3>");
-        $(statusErklaerung).append("<button id=button_gotoFA1>"+LNG.K('algorithm_btn_exe1')+"</button>");
-        $(statusErklaerung).append("<button id=button_gotoFA2>"+LNG.K('algorithm_btn_exe2')+"</button>");
         $("#button_gotoIdee").button();
-        $("#button_gotoFA1").button();
-        $("#button_gotoFA2").button();
         $("#button_gotoIdee").click(function() {$("#tabs").tabs("option","active", 3);});
-        $("#button_gotoFA1").click(function() {$("#tabs").tabs("option","active", 4);});
-        $("#button_gotoFA2").click(function() {$("#tabs").tabs("option","active", 5);});
         // Falls wir im "Vorspulen" Modus waren, daktiviere diesen
         if(this.fastForwardIntervalID != null) {
             this.stopFastForward();
         }
-        s.id = 7;
+        s.id = 8;
     };
 
 
@@ -754,7 +774,7 @@ function HopcroftKarp(svgSelection) {
             this.setDisabledForward(false);
             this.setDisabledBackward(true);
         } 
-        else if (s.id == 7) {
+        else if (s.id == 8) {
             this.setDisabledForward(true);
             this.setDisabledBackward(false);
         }
