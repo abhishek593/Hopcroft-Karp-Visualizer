@@ -44,8 +44,6 @@
     <script src="js/GraphEditorTab.js"></script>
     <script src="js/ExerciseTab1.js"></script>
     <script src="js/Exercise1.js"></script>
-    <script src="js/ExerciseTab2.js"></script>
-    <script src="js/Exercise2.js"></script>
     <script src="js/siteAnimation.js"></script>
 
     <link rel="stylesheet" type="text/css" href="css/graph-style.css" />
@@ -153,7 +151,6 @@
             <li><a href="#tab_ta"><span>Run the algorithm</span></a></li>
             <li><a href="#tab_ti"><span>Description of the algorithm</span></a></li>
             <li><a href="#tab_tf1"><span>Exercise 1</span></a></li>
-            <li><a href="#tab_tf2"><span>Exercise 2</span></a></li>
             <li><a href="#tab_tw"><span>More</span></a></li>
         </ul>
 
@@ -181,7 +178,7 @@
             </div>
         </div>
 
-        <!-- TAB Graph Erstellen -->
+        <!-- TAB Graph editor -->
         <div id="tab_tg">
             <div>
                 <div class="canvasWrapper">
@@ -252,7 +249,7 @@
             </div>
         </div>
 
-        <!-- TAB Algorithmus ausführen -->
+        <!-- TAB run algorithm -->
        <div id="tab_ta">
             <div>
                 <div class="canvasWrapper">
@@ -331,7 +328,7 @@
             </div>
         </div>
 
-        <!-- TAB Beschreibung des Algorithmus -->
+        <!-- TAB description of algorithm -->
         <div id="tab_ti" style="display: none;">
             <div>
                 <h1>Matching on bipartite Graphs</h1>
@@ -354,33 +351,6 @@
                     <svg class="graphCanvas" id="tf1_canvas_graph" width="700" height="450"></svg>
                     </div>
                     <a class="svgDownloader" download="graph-algorithm.svg" href="data:text/plain,test">SVG Download</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Tab Exercise 2 -->
-        <div id="tab_tf2">
-            <div>
-                <div class="canvasWrapper">
-                    <div class="svgContainer">
-                    <svg class="graphCanvas" id="tf2_canvas_graph" width="700" height="450"></svg>
-                    </div>
-                    <a class="svgDownloader" download="graph-algorithm.svg" href="data:text/plain,test">SVG Download</a>
-                    <div class="Legende">
-                        <h2 class="LegendeHeader"><button class="LegendeMin"></button> Legend</h2>
-                        <div class="LegendeText">
-                             <table>
-                                <tr>
-                                    <td class="LegendeTabelle"><img src="img/matchingKnoten.png" alt="MatchedNode" class="LegendeIcon"></td>
-                                    <td><span>matched vertex</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="LegendeTabelle"><img src="img/matchingEdge.png" alt="Knoten" class="LegendeIcon"></td>
-                                    <td><span>matching edge</span></td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
