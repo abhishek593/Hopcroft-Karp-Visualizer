@@ -216,9 +216,9 @@ Graph.Edge.prototype.contains = function(mx,my,ctx) {
 	Graph.prototype.base_addEdgeWithID = function(startId, endId, edgeId, resources) {
 		var s = this.nodes.get(startId);
 		var t = this.nodes.get(endId);
-        console.log(s,t,edgeId)
+        // console.log(s,t,edgeId)
 		var edge = new Graph.Edge(s, t, edgeId);
-        console.log(edge)
+        // console.log(edge)
 		edge.resources=resources;
 		edge.start.outEdges.set(edge.id,edge);
 		edge.end.inEdges.set(edge.id,edge);
@@ -359,16 +359,26 @@ Graph.Edge.prototype.contains = function(mx,my,ctx) {
      * @return {GraphNode}
      */
     Graph.prototype.addBFSEdge = function (s, t, id) {
-        console.log(s, t, id)
+        // console.log(s, t, id)
         var resources = [];
         resources.push(1);
         var edge = this.base_addEdgeWithID(s, t, id, resources)
         edge.state.color = global_Edgelayout.lineColor;
         edge.state.width = global_Edgelayout.lineWidth;
         edge.state.dashed = false;
-        console.log(edge)
+        // console.log(edge)
         return edge;
     };	
+
+    /**
+     * Entfernt den angegebenen Knoten aus dem Graph
+     * @method
+     * @param {Number} nodeID ID des zu löschenden Knoten.
+     */
+    Graph.prototype.removeBFSNode = function(nodeID) {
+        this.base_removeNode(nodeID);
+        this.reorderNodes();
+    };
 	
     Graph.prototype.addNodeWithID = function (isInU, posX, posY, id) {
         var numberOfNodes;

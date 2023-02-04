@@ -93,17 +93,25 @@ function HopcroftKarp(svgSelection) {
     var s = null;
 
     /**
+         * Storing nodes for bfs tree
+         * @type {2d array}
+         */
+    var isShownBfsTree = false;
+    
+    /**
      * Storing nodes for bfs tree
      * @type {2d array}
      */
     var bfs_levels = null;
+    var stored_bfs_levels = null;
 
     /**
      * Storing edges of bfs tree as adjacency list
      * @type {array}
      */
     var bfs_edges = null;
-
+    var stored_bfs_edges = null;
+    
     /*
     * Alle benoetigten Information zur Wiederherstellung der vorangegangenen Schritte werden hier gespeichert.
     * @type Array
@@ -338,7 +346,7 @@ function HopcroftKarp(svgSelection) {
                 this.hidePath(disjointPaths[currentPath]);
                 break;
             case SHOW_BFS_TREE:
-                this.updateBfsTree([]);
+                this.updateBfsTree();
                 break;
             case END_ALGORITHM:
                 this.endAlgorithm();
@@ -357,20 +365,23 @@ function HopcroftKarp(svgSelection) {
     * Updating the $$BFStree
     * @method -- to implement
     */
-    this.updateBfsTree = function (branches) {        
+    this.updateBfsTree = function (shortestPathLength) {        
         // Graph.instance.addBFSNode(100, 200, [])
         var l = 0;
         var posX = 100;
         var posY = 400;
-        var shiftX = 100;
-        var shiftY = 100;
+        var shiftX = 50;
+        var shiftY = 50;
         var mtoBFS = new Object();
+        stored_bfs_levels = [];
+        stored_bfs_edges = [];
         for(var n in bfs_levels){
             var c = 0;
             for(var cur in bfs_levels[n]) {
                 var nid = bfs_levels[n][cur];
                 // make another node corresponding to nid
                 var nnode = Graph.instance.addBFSNode(posX + (c++)*shiftX, posY - l*shiftY,[]);
+                stored_bfs_levels.push(nnode.id);
                 mtoBFS[nid] = nnode.id;
             }
             l++;
@@ -379,19 +390,25 @@ function HopcroftKarp(svgSelection) {
         var edid = Graph.instance.getMaxEdgeId();
         for(var e in bfs_edges) {
             edge = bfs_edges[e];
-            console.log(mtoBFS[edge[0]]);
             var nedge = Graph.instance.addBFSEdge(mtoBFS[edge[0]], mtoBFS[edge[1]], edid++);
+            stored_bfs_edges.push(nedge.id);
         }
 
         this.update();
         
         // work on this function
-        s.id = END_ALGORITHM;
-        $(statusErklaerung).html("<h3> "+LNG.K('textdb_msg_end_algo')+"</h3>"
-            + "<p>"+LNG.K('textdb_msg_end_algo_1')+"</p>");
+        console.log('reached here')
+        s.id = NEXT_AUGMENTING_PATH;
+        $(statusErklaerung).html('<h3>'+iteration+'. '+LNG.K('textdb_text_iteration')+'</h3>'
+            + "<h3> "+LNG.K('textdb_msg_begin_it')+"</h3>"
+            + "<p>"+LNG.K('textdb_msg_begin_it_1')+"<p>"
+            + "<p>"+LNG.K('textdb_msg_path_shortest')+ shortestPathLength + "</p>"
+            + "<p>"+LNG.K('textdb_msg_begin_it_2')+"<p>"
+            + "<p>"+LNG.K('textdb_msg_begin_it_3')+"<p>");
+        
     };
 
-    /*
+    /**
      * Develop bfs tree
      * @param bfsEdges Adjacency matrix
      * @param supernode Starting nodes
@@ -445,6 +462,28 @@ function HopcroftKarp(svgSelection) {
         bfs_edges = edges;
     }
 
+    /**
+     * destroy bfs tree
+     * @method
+     */
+    var destroyBFSTree = function() {
+        // for(var e in stored_bfs_edges) {
+        //     edge = stored_bfs_edges[e];
+        //     Graph.instance.removeEdge(edge);
+        // }
+        console.log('delete nodes');
+        for(var n in stored_bfs_levels){
+            var nid = stored_bfs_levels[n];
+            // make another node corresponding to nid
+            Graph.instance.removeBFSNode(nid);
+        }
+        mtoBFS = {};
+
+        // save history here
+        stored_bfs_edges = {};
+        stored_bfs_levels = {};
+    }
+
     /*
     * Mit Hilfe der Breitensuche wird ein Augmentationsgraph aufgebaut, der die kuerzesten Augmentationswege enthaelt.
     * @param {Object} superNode   Startknoten fuer die Breitensuche.
@@ -473,7 +512,7 @@ function HopcroftKarp(svgSelection) {
                 examined[node.id] = true;
                 //find all adjacent edges
                 var edges = node.getOutEdges();
-/*                var inEdges = node.getInEdges();
+                /*                var inEdges = node.getInEdges();
                 for (var e in inEdges) {edges[e] = inEdges[e];}*/
                 //try all the found edges
                 for (var e in edges) {
@@ -627,11 +666,11 @@ function HopcroftKarp(svgSelection) {
      * @method
      * */
     this.beginIteration = function () {
+        destroyBFSTree();
         iteration++;
         disjointPaths = [];
         currentPath = 0;
         shortestPathLength = 0;
-        isShownBfsTree = false;
         // finde alle freien Knoten in der U-Partition
         var superNode = {};
         for (var n in Graph.instance.unodes) {
@@ -641,7 +680,7 @@ function HopcroftKarp(svgSelection) {
         //fuehre Breiten- und Tiefensuche aus
         bfs(superNode);
 
-        developBFStree(bfsEdges, superNode)
+        developBFStree(bfsEdges, superNode);
         // console.log(bfsEdges[1][0])
 
         dfs(superNode);
@@ -660,17 +699,10 @@ function HopcroftKarp(svgSelection) {
         for(var e in matching){
             setEdgeMatched(Graph.instance.edges.get(e));
         }
-        if(shortestPathLength > 0){
-            s.id = NEXT_AUGMENTING_PATH;
-            $(statusErklaerung).html('<h3>'+iteration+'. '+LNG.K('textdb_text_iteration')+'</h3>'
-                + "<h3> "+LNG.K('textdb_msg_begin_it')+"</h3>"
-                + "<p>"+LNG.K('textdb_msg_begin_it_1')+"<p>"
-                + "<p>"+LNG.K('textdb_msg_path_shortest')+ shortestPathLength + "</p>"
-                + "<p>"+LNG.K('textdb_msg_begin_it_2')+"<p>"
-                + "<p>"+LNG.K('textdb_msg_begin_it_3')+"<p>");
-        }
-        else if (isShownBfsTree === false) {
-            isShownBfsTree = true;
+
+        if (shortestPathLength > 0) {
+            // need to inprove this flow
+            // we are doing bfs 2 times once to make the graph ui and other to augment
             s.id = SHOW_BFS_TREE;
             console.log('show bfs tree in this step', s.id)
         } 
