@@ -1,4 +1,4 @@
-var graphEditorTab = null, graphEditorTab1 = null, algorithmTab = null, exerciseTab1 = null, exerciseTab2 = null;
+var graphEditorTab = null, algorithmTab = null, exerciseTab1 = null, exerciseTab2 = null;
 
 function svgHack(){
     //http://www.mediaevent.de/svg-in-html-seiten/
@@ -51,9 +51,6 @@ function initializeSiteLayout(GraphAlgorithmConstructor) {
     
     graphEditorTab = new GraphEditorTab(new GraphEditor(d3.select("#tg_canvas_graph")),$("#tab_tg"));
     graphEditorTab.init();
-    
-    graphEditorTab1 = new GraphEditorTab(new GraphEditor(d3.select("#tg_canvas_graph1")),$("#tg_canvas_graph1"));
-    graphEditorTab1.init();
 
     var algo = new GraphAlgorithmConstructor(d3.select("#ta_canvas_graph"));
     algorithmTab = new AlgorithmTab(algo, $("#tab_ta"));
@@ -86,7 +83,6 @@ function initializeSiteLayout(GraphAlgorithmConstructor) {
             var id = ui.newPanel[0].id;
             if(id == "tab_tg") {
                 graphEditorTab.activate();
-                graphEditorTab1.activate();
             } else if(id == "tab_ta") {
                 algorithmTab.activate();
             }

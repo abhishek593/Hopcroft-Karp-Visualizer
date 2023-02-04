@@ -9,8 +9,8 @@
  * @type Object
  */
 var graph_constants = {
-    U_POSITION : 100, //standard 100
-    V_POSITION : 400,//standard 400
+    U_POSITION : 600, //standard 100
+    V_POSITION : 900,//standard 400
     B_POSITION : 500,//standard 400
     LEFT_POSITION : 60,
     DIFF: 80,
@@ -35,6 +35,7 @@ var Graph = function(){
      */
     this.vnodes = new Object();
     this.bfsnodes = new Object();
+    this.bfsEdgeList = new Object();
     this.nodeIds=0;
     this.edgeIds=0;
     this.nodes=d3.map();      // key: node ID, value: node
@@ -160,6 +161,16 @@ Graph.Edge.prototype.contains = function(mx,my,ctx) {
     }
     return false;
 };
+
+    /**
+     *  The clear bfs tree method
+     *  @type method
+     */
+    Graph.prototype.setBFSTree = function(nodes, edges){
+        console.log('setting the BFS tree in')
+        this.bfsnodes = nodes
+        this.bfsEdgeList = edges
+      }
 
     /**
      *  Die addNode Methode der Oberklasse
@@ -318,7 +329,7 @@ Graph.Edge.prototype.contains = function(mx,my,ctx) {
     };
 
     /**
-     * Fügt dem Graph einen Knoten hinzu
+     * Add bfs tree node
      * @method
      * @param {int} x posX
      * @param {int} y posY
@@ -330,7 +341,24 @@ Graph.Edge.prototype.contains = function(mx,my,ctx) {
         this.reorderNodes();
         return node;
     };
-	
+
+    Graph.prototype.getMaxEdgeId = function () {
+        var newEdgeId = this.edgeIds;
+        return newEdgeId;
+    };
+
+    /**
+     * Add bfs tree edge
+     * @method
+     * @param {int} x posX
+     * @param {int} y posY
+     * @return {GraphNode}
+     */
+    Graph.prototype.addBFSEdge = function (s, t, id) {
+        console.log(s, t, id)
+        var edge = this.base_addEdgeWithID(s, t, id, [])
+        return edge;
+    };	
 	
     Graph.prototype.addNodeWithID = function (isInU, posX, posY, id) {
         var numberOfNodes;
@@ -623,6 +651,7 @@ Graph.setGraph = function(tabprefix) {
             break;
         case "Random Graph":
             Graph.instance = Graph.createRandomGraph();
+            Graph.instance2 = new Graph();
             Graph.onLoadedCbFP.forEach(function(fp){fp()});
             return;
     }
@@ -649,6 +678,7 @@ Graph.setInstance = function(error,text,filename,exceptionFp){
     var noErrors=false;
     try{
       Graph.instance = Graph.parse(text);
+      Graph.instance2 = new Graph();
       noErrors=true;
     }catch(ex){
       if(exceptionFp) exceptionFp(ex,text,filename);
@@ -664,6 +694,7 @@ Graph.loadInstance = function(filename,exceptionFp){
 }
 
 Graph.instance = null;
+Graph.instance2 = null;
 
 Graph.onLoadedCbFP = [];
 

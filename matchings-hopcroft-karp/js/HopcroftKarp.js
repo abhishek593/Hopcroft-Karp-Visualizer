@@ -92,6 +92,18 @@ function HopcroftKarp(svgSelection) {
      */
     var s = null;
 
+    /**
+     * Storing nodes for bfs tree
+     * @type {2d array}
+     */
+    var bfs_levels = null;
+
+    /**
+     * Storing edges of bfs tree as adjacency list
+     * @type {array}
+     */
+    var bfs_edges = null;
+
     /*
     * Alle benoetigten Information zur Wiederherstellung der vorangegangenen Schritte werden hier gespeichert.
     * @type Array
@@ -184,6 +196,7 @@ function HopcroftKarp(svgSelection) {
         this.stopFastForward();
         this.reset();
         Graph.instance = null;
+        Graph.instance2 = null;
         // load selected graph again 
         Graph.setGraph("tg");
     };
@@ -346,13 +359,97 @@ function HopcroftKarp(svgSelection) {
     */
     this.updateBfsTree = function (branches) {
         console.log('updated the ui')
-        Graph.instance.addBFSNode(100, 200)
+        
+        // Graph.instance.addBFSNode(100, 200)
+        console.log(bfs_levels);
+
+        var l = 0;
+        var posX = 100;
+        var posY = 400;
+        var shiftX = 100;
+        var shiftY = 100;
+        var mtoBFS = new Object();
+        for(var n in bfs_levels){
+            var c = 0;
+            for(var cur in bfs_levels[n]) {
+                var nid = bfs_levels[n][cur];
+                // make another node corresponding to nid
+                var nnode = Graph.instance.addBFSNode(posX + (c++)*shiftX, posY - l*shiftY);
+                mtoBFS[nid] = nnode.id;
+            }
+            l++;
+        }
+
+        var edid = Graph.instance.getMaxEdgeId();
+        for(var e in bfs_edges) {
+            edge = bfs_edges[e];
+            console.log(mtoBFS[edge[0]]);
+            var nedge = Graph.instance.addBFSEdge(mtoBFS[edge[0]], mtoBFS[edge[1]], edid++);
+        }
         
         // work on this function
         s.id = END_ALGORITHM;
         $(statusErklaerung).html("<h3> "+LNG.K('textdb_msg_end_algo')+"</h3>"
             + "<p>"+LNG.K('textdb_msg_end_algo_1')+"</p>");
     };
+
+    /*
+     * Develop bfs tree
+     * @param bfsEdges Adjacency matrix
+     * @param supernode Starting nodes
+     * @method
+     */
+    var developBFStree = function (bfsEdges, superNode) {
+        var layers = [];
+        var edges = [];
+        var examined = {};
+        Graph.instance.nodes.forEach( function(knotenID, knoten) {
+            examined[knotenID] = false;
+        });
+
+        // console.log(superNode)
+        // for (var n = 0; n <=3; n++) {
+        //     console.log(n)
+        //     console.log(bfsEdges[n]);
+        // }
+
+        var curLayer = [];
+        var nextLayer = [];
+        for (var free in superNode) {
+            curLayer.push(superNode[free].id);
+        }
+        curLayer = [...new Set(curLayer)];
+        while(curLayer.length > 0) {
+            // console.log(curLayer)
+            layers.push(curLayer)
+            nextLayer = [];
+            for(let n in curLayer) {
+                nid = curLayer[n]
+                examined[nid] = true;
+                for(var c in bfsEdges[nid]){
+                    c = parseInt(c)
+                    if(!examined[c]) {
+                        edges.push([nid, c]);
+                        nextLayer.push(c);
+                    }
+                }
+            }
+            curLayer = [...new Set(nextLayer)];
+        }
+
+        // console.log(layers)
+        // console.log(edges)
+        // Graph.instance.bfsnodes = layers
+        // Graph.instance.bfsEdgeList = edges
+
+
+        bfs_levels = layers;
+        bfs_edges = edges;
+
+
+        console.log(layers)
+        Graph.instance.setBFSTree(layers, edges);
+    }
 
     /*
     * Mit Hilfe der Breitensuche wird ein Augmentationsgraph aufgebaut, der die kuerzesten Augmentationswege enthaelt.
@@ -549,10 +646,14 @@ function HopcroftKarp(svgSelection) {
         }
         //fuehre Breiten- und Tiefensuche aus
         bfs(superNode);
+
+        developBFStree(bfsEdges, superNode)
+        // console.log(bfsEdges[1][0])
+
         dfs(superNode);
 
-        console.log(matching)
-        console.log(disjointPaths)
+        // console.log(matching)
+        // console.log(disjointPaths)
 
         //restore Layouts 
         Graph.instance.nodes.forEach( function(nodeID, node) {

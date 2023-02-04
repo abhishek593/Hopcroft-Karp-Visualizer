@@ -112,10 +112,10 @@ var GraphDrawer = function(svgOrigin,extraMargin,transTime){
 
     this.squeeze = function(){
         var nodes;
-
+        console.log("sqeeze")
         if(Graph.instance && (nodes = Graph.instance.getNodes())){
             this.x.domain(d3.extent(nodes, function(d) { return d.x; }));
-            this.y.domain(d3.extent(nodes, function(d) { return d.y; }));
+            // this.y.domain(d3.extent(nodes, function(d) { return d.y; }));
         }
     }
 
