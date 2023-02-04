@@ -132,7 +132,6 @@ function dblclick(){
   d3.event.preventDefault();d3.event.stopPropagation();
   var pos = d3.mouse(this);
   addNode(pos);
-  
 }
 
 //Es wird entweder die Auswahl aufgehoben, ein Knoten ausgewählt oder eine Kante zwischen vorhandenen Knoten erstellt.
@@ -244,8 +243,17 @@ function contextmenuEdge(d){
 function addNode(pos){
   var xy = that.screenPosToNodePos(pos);
   var middleY = (graph_constants.U_POSITION + graph_constants.V_POSITION) * 0.5; 
-  var inU = (xy.y <= middleY);   
+  var inU = (xy.y <= middleY);  
   Graph.instance.addNode(inU);
+  that.update();
+//   return point;
+}
+
+function addBFSNode(pos){
+  var xy = that.screenPosToNodePos(pos);
+  var middleY = (graph_constants.U_POSITION + graph_constants.V_POSITION) * 0.5; 
+  // var inU = (xy.y <= middleY);  
+  Graph.instance.addNode(xy.x, xy.y);
   that.update();
 //   return point;
 }

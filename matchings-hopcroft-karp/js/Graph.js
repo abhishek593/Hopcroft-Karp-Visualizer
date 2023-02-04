@@ -11,6 +11,7 @@
 var graph_constants = {
     U_POSITION : 100, //standard 100
     V_POSITION : 400,//standard 400
+    B_POSITION : 500,//standard 400
     LEFT_POSITION : 60,
     DIFF: 80,
     MAX_NODES: 8
@@ -33,6 +34,7 @@ var Graph = function(){
      *  @type Object
      */
     this.vnodes = new Object();
+    this.bfsnodes = new Object();
     this.nodeIds=0;
     this.edgeIds=0;
     this.nodes=d3.map();      // key: node ID, value: node
@@ -281,12 +283,20 @@ Graph.Edge.prototype.contains = function(mx,my,ctx) {
             node.x = graph_constants.LEFT_POSITION - offset + (i++*diffv);
             node.y = graph_constants.V_POSITION;
         }
+        for(var n in this.bfsnodes){
+            var node = this.bfsnodes[n]
+            // set x and y according to your logic
+            var offset = 0;
+            if(diffv < graph_constants.DIFF) offset = graph_constants.LEFT_POSITION / graph_constants.MAX_NODES * sizev / 4;
+            // node.x = graph_constants.LEFT_POSITION - offset + (i++*diffv);
+            // node.y = graph_constants.B_POSITION + 100 * node.layer;
+        }
     };
 
     /**
      * Fügt dem Graph einen Knoten hinzu
      * @method
-     * @param {Boolean} isInU Gibt an, ob der Knoten in die erste Knotenmenge hinzugefuegt werden soll
+     * @param {int} isInU Gibt an, ob der Knoten in die erste Knotenmenge hinzugefuegt werden soll
      * @return {GraphNode}
      */
     Graph.prototype.addNode = function (isInU) {
@@ -304,6 +314,20 @@ Graph.Edge.prototype.contains = function(mx,my,ctx) {
             }
             this.reorderNodes();
         }
+        return node;
+    };
+
+    /**
+     * Fügt dem Graph einen Knoten hinzu
+     * @method
+     * @param {int} x posX
+     * @param {int} y posY
+     * @return {GraphNode}
+     */
+    Graph.prototype.addBFSNode = function (x,y) {
+        var node = this.base_addNode(x,y, []);
+        this.bfsnodes[node.id] = node;
+        this.reorderNodes();
         return node;
     };
 	

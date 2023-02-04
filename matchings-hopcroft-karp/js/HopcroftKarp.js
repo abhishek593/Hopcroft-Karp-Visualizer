@@ -346,6 +346,8 @@ function HopcroftKarp(svgSelection) {
     */
     this.updateBfsTree = function (branches) {
         console.log('updated the ui')
+        Graph.instance.addBFSNode(100, 200)
+        
         // work on this function
         s.id = END_ALGORITHM;
         $(statusErklaerung).html("<h3> "+LNG.K('textdb_msg_end_algo')+"</h3>"
