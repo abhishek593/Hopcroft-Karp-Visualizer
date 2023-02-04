@@ -167,7 +167,6 @@ Graph.Edge.prototype.contains = function(mx,my,ctx) {
      *  @type method
      */
     Graph.prototype.setBFSTree = function(nodes, edges){
-        console.log('setting the BFS tree in')
         this.bfsnodes = nodes
         this.bfsEdgeList = edges
       }
@@ -217,7 +216,9 @@ Graph.Edge.prototype.contains = function(mx,my,ctx) {
 	Graph.prototype.base_addEdgeWithID = function(startId, endId, edgeId, resources) {
 		var s = this.nodes.get(startId);
 		var t = this.nodes.get(endId);
+        console.log(s,t,edgeId)
 		var edge = new Graph.Edge(s, t, edgeId);
+        console.log(edge)
 		edge.resources=resources;
 		edge.start.outEdges.set(edge.id,edge);
 		edge.end.inEdges.set(edge.id,edge);
@@ -335,10 +336,13 @@ Graph.Edge.prototype.contains = function(mx,my,ctx) {
      * @param {int} y posY
      * @return {GraphNode}
      */
-    Graph.prototype.addBFSNode = function (x,y) {
-        var node = this.base_addNode(x,y, []);
-        this.bfsnodes[node.id] = node;
-        this.reorderNodes();
+    Graph.prototype.addBFSNode = function (x,y,resources) {
+        var node = new Graph.Node(+x,+y,this.nodeIds++);
+        node.resources=resources || [];
+        for(var i = 0, toAdd = this.getNodeResourcesSize() - node.resources.length; i<toAdd; i++){
+            node.resources.push(0);
+        }
+        this.nodes.set(node.id,node);
         return node;
     };
 
@@ -356,7 +360,13 @@ Graph.Edge.prototype.contains = function(mx,my,ctx) {
      */
     Graph.prototype.addBFSEdge = function (s, t, id) {
         console.log(s, t, id)
-        var edge = this.base_addEdgeWithID(s, t, id, [])
+        var resources = [];
+        resources.push(1);
+        var edge = this.base_addEdgeWithID(s, t, id, resources)
+        edge.state.color = global_Edgelayout.lineColor;
+        edge.state.width = global_Edgelayout.lineWidth;
+        edge.state.dashed = false;
+        console.log(edge)
         return edge;
     };	
 	

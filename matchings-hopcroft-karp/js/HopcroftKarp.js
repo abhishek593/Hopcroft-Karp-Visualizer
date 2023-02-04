@@ -357,12 +357,8 @@ function HopcroftKarp(svgSelection) {
     * Updating the $$BFStree
     * @method -- to implement
     */
-    this.updateBfsTree = function (branches) {
-        console.log('updated the ui')
-        
-        // Graph.instance.addBFSNode(100, 200)
-        console.log(bfs_levels);
-
+    this.updateBfsTree = function (branches) {        
+        // Graph.instance.addBFSNode(100, 200, [])
         var l = 0;
         var posX = 100;
         var posY = 400;
@@ -374,7 +370,7 @@ function HopcroftKarp(svgSelection) {
             for(var cur in bfs_levels[n]) {
                 var nid = bfs_levels[n][cur];
                 // make another node corresponding to nid
-                var nnode = Graph.instance.addBFSNode(posX + (c++)*shiftX, posY - l*shiftY);
+                var nnode = Graph.instance.addBFSNode(posX + (c++)*shiftX, posY - l*shiftY,[]);
                 mtoBFS[nid] = nnode.id;
             }
             l++;
@@ -386,6 +382,8 @@ function HopcroftKarp(svgSelection) {
             console.log(mtoBFS[edge[0]]);
             var nedge = Graph.instance.addBFSEdge(mtoBFS[edge[0]], mtoBFS[edge[1]], edid++);
         }
+
+        this.update();
         
         // work on this function
         s.id = END_ALGORITHM;
@@ -445,10 +443,6 @@ function HopcroftKarp(svgSelection) {
 
         bfs_levels = layers;
         bfs_edges = edges;
-
-
-        console.log(layers)
-        Graph.instance.setBFSTree(layers, edges);
     }
 
     /*
