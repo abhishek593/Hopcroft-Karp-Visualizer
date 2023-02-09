@@ -65,10 +65,9 @@ function GraphEditorTab(algo,p_tab) {
      * @method
      */
     this.activate = function() {
-       Graph.setGraph("tg");  
+       Graph.setGraph("tg"); 
        if(Graph.instance) algo.update();
        Tab.prototype.activate.call(this);
-
     };
     
     /**

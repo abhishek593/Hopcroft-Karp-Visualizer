@@ -9,8 +9,9 @@
  * @type Object
  */
 var graph_constants = {
-    U_POSITION : 100, //standard 100
-    V_POSITION : 400,//standard 400
+    U_POSITION : 600, //standard 100
+    V_POSITION : 900,//standard 400
+    B_POSITION : 500,//standard 400
     LEFT_POSITION : 60,
     DIFF: 80,
     MAX_NODES: 8
@@ -33,6 +34,8 @@ var Graph = function(){
      *  @type Object
      */
     this.vnodes = new Object();
+    this.bfsnodes = new Object();
+    this.bfsEdgeList = new Object();
     this.nodeIds=0;
     this.edgeIds=0;
     this.nodes=d3.map();      // key: node ID, value: node
@@ -160,6 +163,15 @@ Graph.Edge.prototype.contains = function(mx,my,ctx) {
 };
 
     /**
+     *  The clear bfs tree method
+     *  @type method
+     */
+    Graph.prototype.setBFSTree = function(nodes, edges){
+        this.bfsnodes = nodes
+        this.bfsEdgeList = edges
+      }
+
+    /**
      *  Die addNode Methode der Oberklasse
      *  @type method
      */
@@ -204,7 +216,9 @@ Graph.Edge.prototype.contains = function(mx,my,ctx) {
 	Graph.prototype.base_addEdgeWithID = function(startId, endId, edgeId, resources) {
 		var s = this.nodes.get(startId);
 		var t = this.nodes.get(endId);
+        // console.log(s,t,edgeId)
 		var edge = new Graph.Edge(s, t, edgeId);
+        // console.log(edge)
 		edge.resources=resources;
 		edge.start.outEdges.set(edge.id,edge);
 		edge.end.inEdges.set(edge.id,edge);
@@ -281,12 +295,20 @@ Graph.Edge.prototype.contains = function(mx,my,ctx) {
             node.x = graph_constants.LEFT_POSITION - offset + (i++*diffv);
             node.y = graph_constants.V_POSITION;
         }
+        for(var n in this.bfsnodes){
+            var node = this.bfsnodes[n]
+            // set x and y according to your logic
+            var offset = 0;
+            if(diffv < graph_constants.DIFF) offset = graph_constants.LEFT_POSITION / graph_constants.MAX_NODES * sizev / 4;
+            // node.x = graph_constants.LEFT_POSITION - offset + (i++*diffv);
+            // node.y = graph_constants.B_POSITION + 100 * node.layer;
+        }
     };
 
     /**
      * Fügt dem Graph einen Knoten hinzu
      * @method
-     * @param {Boolean} isInU Gibt an, ob der Knoten in die erste Knotenmenge hinzugefuegt werden soll
+     * @param {int} isInU Gibt an, ob der Knoten in die erste Knotenmenge hinzugefuegt werden soll
      * @return {GraphNode}
      */
     Graph.prototype.addNode = function (isInU) {
@@ -306,7 +328,57 @@ Graph.Edge.prototype.contains = function(mx,my,ctx) {
         }
         return node;
     };
-	
+
+    /**
+     * Add bfs tree node
+     * @method
+     * @param {int} x posX
+     * @param {int} y posY
+     * @return {GraphNode}
+     */
+    Graph.prototype.addBFSNode = function (x,y,resources) {
+        var node = new Graph.Node(+x,+y,this.nodeIds++);
+        node.resources=resources || [];
+        for(var i = 0, toAdd = this.getNodeResourcesSize() - node.resources.length; i<toAdd; i++){
+            node.resources.push(0);
+        }
+        this.nodes.set(node.id,node);
+        return node;
+    };
+
+    Graph.prototype.getMaxEdgeId = function () {
+        var newEdgeId = this.edgeIds;
+        return newEdgeId;
+    };
+
+    /**
+     * Add bfs tree edge
+     * @method
+     * @param {int} x posX
+     * @param {int} y posY
+     * @return {GraphNode}
+     */
+    Graph.prototype.addBFSEdge = function (s, t, id) {
+        // console.log(s, t, id)
+        var resources = [];
+        resources.push(1);
+        var edge = this.base_addEdgeWithID(s, t, id, resources)
+        edge.state.color = global_Edgelayout.lineColor;
+        edge.state.width = global_Edgelayout.lineWidth;
+        edge.state.dashed = false;
+        // console.log(edge)
+        return edge;
+    };	
+
+    /**
+     * Entfernt den angegebenen Knoten aus dem Graph
+     * @method
+     * @param {Number} nodeID ID des zu löschenden Knoten.
+     */
+    Graph.prototype.removeBFSNode = function(nodeID) {
+        this.base_removeNode(nodeID);
+        this.reorderNodes();
+    };
 	
     Graph.prototype.addNodeWithID = function (isInU, posX, posY, id) {
         var numberOfNodes;
@@ -599,6 +671,7 @@ Graph.setGraph = function(tabprefix) {
             break;
         case "Random Graph":
             Graph.instance = Graph.createRandomGraph();
+            Graph.instance2 = new Graph();
             Graph.onLoadedCbFP.forEach(function(fp){fp()});
             return;
     }
@@ -625,6 +698,7 @@ Graph.setInstance = function(error,text,filename,exceptionFp){
     var noErrors=false;
     try{
       Graph.instance = Graph.parse(text);
+      Graph.instance2 = new Graph();
       noErrors=true;
     }catch(ex){
       if(exceptionFp) exceptionFp(ex,text,filename);
@@ -640,6 +714,7 @@ Graph.loadInstance = function(filename,exceptionFp){
 }
 
 Graph.instance = null;
+Graph.instance2 = null;
 
 Graph.onLoadedCbFP = [];
 

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta charset="utf-8">
+    <meta name="description" content="This applet demonstrates the Hopcroft-Karp Algorithm" />
+    <meta name="keywords" content="Hopcroft-Karp, maximal Matching, Algorithmu, TUM, Technische Universität München, Applet">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="author" content="Ruslan Zabrodin">
+
+    <link rel="alternate" hreflang="de" href="index_de.html" />
+
+<!--     the whole page layout style -->
+    <link rel="stylesheet" type="text/css" href="../library/css/style.css" />
+
+    <link rel="stylesheet" type="text/css" href="../library/css/tum-theme2/jquery-ui-1.10.1.custom.min.css" />
+ <!--   <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css"> -->
+
+ <!--     MathJax, used in the more tab in pseudocode -->
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            showMathMenu: false,
+            showMathMenuMSIE: false
+        });
+    </script>
+
+<!-- LOCAL -->
+    <script src="../library/js/jquery-1.9.1.min.js" type="text/javascript"></script>
+    <script src="../library/js/jquery-ui-1.10.1.custom.min.js" type="text/javascript"></script>
+    <link type="text/css" href="../library/css/mmenu/jquery.mmenu.all.css" rel="stylesheet" />
+    <script type="text/javascript" src="../library/js/mmenu/jquery.mmenu.min.all.js"></script>
+    <script type="text/javascript" src="../library/js/mathjax/MathJax.js?config=TeX-AMS-MML_SVG.js&locale=en"></script>
+    <script src="../library/js/d3.js"></script>
+
+    <script src="../library/js/lang.js" type="text/javascript"></script>
+
+<!-- Adrians d3 related library code -->
+    <script src="js/Graph.js"></script>
+    <script src="js/GraphDrawer.js"></script>
+    <script src="js/GraphEditor.js"></script>
+    <script src="js/Logger.js"></script>
+    <script src="js/Tab.js"></script>
+    <script src="js/AlgorithmTab.js"></script>
+    <script src="js/GraphEditorTab.js"></script>
+    <script src="js/ExerciseTab1.js"></script>
+    <script src="js/Exercise1.js"></script>
+    <script src="js/siteAnimation.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/graph-style.css" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+
+<!-- Files used only for this applet -->
+    <script src="js/HopcroftKarp.js" type="text/javascript"></script>
+
+    <title>The Hopcroft-Karp Algorithm</title>
+</head>
+
+<body>
+    <noscript>
+        <div class="ui-widget">
+            <div class="ui-state-error ui-corner-all" style="padding: .7em;">
+                <div class="ui-icon ui-icon-alert errorIcon"></div>
+                <strong>Please activate Javascript!</strong>
+                <ul style="margin: 0px;">
+                    <li>
+                        This website needs Javascript in order to be displayed properly.
+                    </li>
+                    <li>
+                        Javascript is currently deactivated in your browser. A manual for the activation of Javascript can be found <a href="http://www.enable-javascript.com/">here</a>.
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </noscript>
+    <script>
+        $(function() {
+            LNG.setLanguage('en');
+            initializeSiteLayout(HopcroftKarp);
+        });
+        $(document).ready(function() {
+            $("#menu").mmenu({
+               "navbar": {
+                  "title": "Übersicht"
+               },
+               "offCanvas": {
+                  "zposition": "front"
+               },
+               "counters": true,
+               "slidingSubmenus": true,
+               "classes": "mm-light",
+            });
+         });
+    </script>
+    <a id="menu_link" href="#menu"></a>
+    <nav id="menu">
+        <ul>
+            <li>
+                <a style="white-space:pre-line" href="http://www-m9.ma.tum.de/Allgemeines/GraphAlgorithmenEn">
+                <img src="../library/img/logo_ohne.png" alt="Overview Graph Algorithms">
+                Graph Algorithms Landing Page</a>
+            </li>
+            <li><span>Shortest Path Algorithms</span>
+                <ul>
+                   <li><a href="../spp-dijkstra/index_en.html">Dijkstra's Algorithm</a></li>
+                   <li><a href="../spp-a-star/index_en.html">A* Algorithm</a></li>
+                   <li><a href="../spp-bellman-ford/index_en.html">Bellman-Ford Algorithm</a></li>
+                   <li><a href="../spp-floyd-warshall/index_en.html">Floyd-Warshall Algorithm</a></li>
+                   <!--<li><a href="../spprc-label-setting/index_en.html">Label-Setting Algorithm</a></li>-->
+                </ul>
+            </li>
+            <li><span>Spanning Tree Algorithms</span>
+                <ul>
+                   <li><a href="../mst-prim/index_en.html">Prim's Algorithm</a></li>
+                   <li><a href="../mst-kruskal/index_en.html">Kruskal's Algorithm</a></li>
+                </ul>
+            </li>
+            <li><span>Flow Algorithms</span>
+                <ul>
+                   <li><a href="../flow-ford-fulkerson/index_en.html">Ford-Fulkerson Algorithm</a></li>
+                   <li><a href="../flow-cycle-cancelling/index_en.html">Cycle-Cancelling Algorithm</a></li>
+                   <!--<li><a href="../flow-push-relabel/index_en.html">Push-Relabel Algorithm</a></li>-->
+                </ul>
+            </li>
+            <li><span>Matching Algorithms</span>
+                <ul>
+                   <li class="Selected"><a href="../matchings-hopcroft-karp/index_en.html">Hopcroft-Karp Algorithm</a></li>
+                   <li><a href="../matchings-hungarian-method/index_en.html">Hungarian Method</a></li>
+                   <li><a href="../matchings-blossom-algorithm/index_en.html">Blossom Algorithm</a></li> 
+                </ul>
+            </li>
+            <li><span>Euler Tours and Chinese Postman Problem</span>
+                <ul>
+                   <li><a href="../hierholzer/index_en.html">Hierholzer's Algorithm</a></li>
+                   <li><a href="../directed-chinese-postman/index_en.html">Chinese Postman Problem</a></li>
+                </ul>             
+            </li>
+        </ul>
+    </nav>
+    <div>
+
+    <header>
+        <img src="img/titel_en.png" alt="Matching in bipartite graphs: The Hopcroft-Karp algorithm">
+        <!--<img src="img/hk.png" alt="Matching in bipartiten Graphen: Der Hopcroft-Karp-Algorithmus">-->
+        <img style="position:absolute; right:0px" src="../library/img/TUMLogo.png" alt="Technische Universität München">
+    </header>
+
+    <div id="tabs">
+        <ul>
+            <li><a href="#tab_te"><span>Introduction</span></a></li>
+            <li><a href="#tab_tg"><span>Create a Graph</span></a></li>
+            <li><a href="#tab_ta"><span>Run the algorithm</span></a></li>
+            <li><a href="#tab_ti"><span>Description of the algorithm</span></a></li>
+            <li><a href="#tab_tf1"><span>Exercise 1</span></a></li>
+            <li><a href="#tab_tw"><span>More</span></a></li>
+        </ul>
+
+        <!-- TAB Einführung -->
+        <div id="tab_te">
+            <div id="te_div_Einfuehrungstext">
+                <div id="te_div_beispiel1Container"><img id="te_img_beispiel1" src="img/bipartite_graph.png" alt="Bipartiter Graph"><p>How big is the maximal matching?</p></div>
+                <h1>Bipartite Matching</h1>
+                <p>
+                    One possible application for the bipartite matching problem is allocating students to available jobs. The problem can be modeled using a bipartite graph:
+                    The students and jobs are represented by two disjunct sets of vertices. Edges represent possible assignments (based on qualifications etc).
+                    The goal is to find as many valid assignments as possible, such that each student can only take one job and each job can only be performed by a single student.
+                </p>
+                <p>
+                    Let \( G=(V,E)\) be a given undirected graph. A subset \(M \subseteq E\) is called a matching, if no two edges in M share a node.
+                    A matching M is called maximal, if the cardinality of M is maximal amongst that of all matchings.
+                    In many real world problems, elements from multiple classes have to be assigned to one another.
+                    Whenever there are exactly two such classes, the problem is called <strong>bipartite matching</strong>.
+                </p>
+                <h2>Here we demonstrate the Hopcroft-Karp algorithm that solves the problem of finding maximal matchings on bipartite graphs.</h2>
+                <div id ="te_div_Entscheidung">
+                    <h2>What do you want to do first?</h2>
+                    <button id="te_button_gotoDrawGraph">Test the algorithm!</button> <button id="te_button_gotoIdee">Read detailed description of the algorithm</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB Graph editor -->
+        <div id="tab_tg">
+            <div>
+                <div class="canvasWrapper">
+                    <div class="svgContainer"><svg class="graphCanvas" id="tg_canvas_graph" width="700" height="1000"></svg></div>
+                    <a class="svgDownloader" download="graph-editor.svg" href="data:text/plain,test">SVG Download</a>
+                    <div class="Legende" id="tg_div_Legende">
+                        <h2 class="LegendeHeader"><button class="LegendeMin"></button> Legend</h2>
+                        <div class="LegendeText">
+                            <table>
+                                <tr>
+                                    <td class="LegendeTabelle"><img src="img/knoten.png" alt="Knoten" class="LegendeIcon"></td>
+                                    <td><span>Node</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="LegendeTabelle"><img src="img/kante.png" alt="Knoten" class="LegendeIcon"></td>
+                                    <td><span>Edge</span></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="LegendeMinimized">
+                        <h2 class="LegendeHeader"><button class="LegendeMin"></button> Legend</h2>
+                    </div>
+                </div>
+                <div id="tg_div_statusWindow" class="statusWindow">
+                    <h2>Which graph do you want to execute the algorithm on?</h2>
+                    <h3>Start with an example graph:</h3>
+                    <label for="graphSelector">Select </label>
+<!-- add own graph examples here: -->
+                    <select name="graphSelector" id="tg_select_GraphSelector">
+                        <option selected = true label="Standard Example">Standard Example</option>
+                        <option label="Complete Graph">Complete Graph</option>
+                        <option label="Different Set Sizes">Different Set Sizes</option>
+                        <option label="Random Graph">Random Graph</option>
+                    </select>
+
+                    <h3>Modify it to your desire:<br></h3>
+                    <div id="tg_div_statusErklaerung">
+                    <ul>
+                        <li>The graph consists of two sets of vertices and edges between these sets.</li>
+                        <li>To create a vertex in one of the sets, double click in the area of that set. You can create up to 8 nodes in each of the sets.</li>
+                        <li>To create an edge, first click on the desired origin node and then on the desired destination node.</li>
+                        <li>You can only create edges that run from one vertex-set to another.</li>
+                        <li>Right clicking will delete vertices and edges.</li>
+                    </ul>
+                    </div>
+                    
+                    <h3>Download the modified graph:</h3>
+                    
+                    <a id="fileDownloader" download="graph.txt" href="data:text/plain,test">Download</a>
+                    
+                    <h3>Upload an existing graph:</h3>
+                    <input type="file" id="fileUploader" accept=".txt"/></input>
+                    <div id="ta_div_parseError" title="Error reading graph from file">
+                        A
+                        <h2 style="color:red" id="ta_div_parseErrorText"></h2>
+                        occured when reading from file:
+                        <h3 id="ta_div_parseErrorFilename"></h3>
+                        the contents:
+                        <pre id="ta_div_parseErrorDescription"></pre>
+                    </div>
+
+                    <h3>What next?</h3>
+                   <p><button id="tg_button_gotoAlgorithmTab">Ready &ndash; Run the Algorithm!</button></p>
+
+
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB run algorithm -->
+       <div id="tab_ta">
+            <div>
+                <div class="canvasWrapper">
+                    <div class="svgContainer">
+                    <svg class="graphCanvas" id="ta_canvas_graph" width="700" height="1000"></svg>
+                    </div>
+                    <a class="svgDownloader" download="graph-algorithm.svg" href="data:text/plain,test">SVG Download</a>
+                    <div class="Legende">
+                        <h2 class="LegendeHeader"><button class="LegendeMin"></button> Legend</h2>
+                        <div class="LegendeText">
+                             <table>
+                                <tr>
+                                    <td class="LegendeTabelle"><img src="img/matchingKnoten.png" alt="MatchedNode" class="LegendeIcon"></td>
+                                    <td><span>matched vertex</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="LegendeTabelle"><img src="img/matchingEdge.png" alt="Knoten" class="LegendeIcon"></td>
+                                    <td><span>matching edge</span></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="LegendeMinimized">
+                        <h2 class="LegendeHeader"><button class="LegendeMin"></button> Legend</h2>
+                    </div>
+                </div>
+                <div id="ta_div_statusWindow" class="statusWindow">
+                    <h2 class="">Current state of the algorithm</h2>
+                    <div id="ta_div_abspielbuttons"> <!--class="ui-widget-header ui-corner-all"-->
+                        <input  id="ta_button_rewind" type="checkbox"><label for="ta_button_rewind" id="ta_button_text_rewind">rewind</label>
+                        
+                        <button id="ta_button_Zurueck">prev</button>
+                        
+                        <button id="ta_button_1Schritt">next</button>
+                        
+                        <input  id="ta_button_vorspulen" type="checkbox"><label for="ta_button_vorspulen" id="ta_button_text_fastforward">fast forward</label>
+
+                        <!-- <input type="number" id="ta_vorspulen_speed" min="2" max="500" value=5>ms -->
+
+                        <span id="ta_button_text_pause" style="display:none">pause</span>
+                    </div>
+                    <div id="ta_div_statusTabs">
+                         <ul>
+                            <li><a href="#ta_div_statusErklaerung">Explanation</a></li>
+                            <li><a href="#ta_div_statusPseudocode">Pseudocode</a></li>
+                            <!--<li><a href="#ta_div_statusLogger">Log</a></li>-->
+                        </ul>
+                        <div id="ta_div_statusErklaerung">
+                            <h3>Initialization of the algorithm.</h3>
+                            <p>In the beginning, no vertex has a matching partner. Thus, the matching is empty.</p>
+                            <p>In each iteration, we look for an inclusion-maximal set of shortest vertex-disjunct augmenting paths.</p>
+                            <p>An augmenting path is a path that starts in an unmatched node, ends in an unmatched node and alternates between edges outside of and inside the matching.</p>
+                            <p>Inclusion-maximal means that no other path can be added to the set, such that the paths found stay vertex-disjunct (i.e. don't share any vertices).</p>
+                            <p>When no further augmenting paths can be found, the current matching is optimal and the algorithm terminates..</p>
+                        </div>
+                        <div class="PseudocodeWrapper" id="ta_div_statusPseudocode">
+                            <p class="pseudocode" id="ta_p_begin">BEGIN</p>
+                            <p class="pseudocode" id="ta_p_l2">  M := &empty;</p>
+                            <p class="pseudocode" id="ta_p_l3">  REPEAT </p>
+                            <p class="pseudocode" id="ta_p_l4">    l := Length of the shortest</p>
+                            <p class="pseudocode" id="ta_p_l5">             augmenting path </p>
+                            <p class="pseudocode" id="ta_p_l6">    &Rho; := {P1,...,Pk} inklusion-maximal</p>
+                            <p class="pseudocode" id="ta_p_l7">         set of vertex-disjunct</p>
+                            <p class="pseudocode" id="ta_p_l8">         augmenting paths of lenght l</p>
+                            <p class="pseudocode" id="ta_p_l9">    M := M &oplus; (P1 &cup; P2 &cup; ... &cup; Pk)</p>
+                            <p class="pseudocode" id="ta_p_20">  UNTIL &Rho; = &empty;</p>
+                            <p class="pseudocode" id="ta_p_return">RETURN M</p>
+                            <p class="pseudocode" id="ta_p_end">END</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="ta_div_confirmTabChange" title="Terminate Execution?" class="tabChangeWarningDialog">
+                <h2>If you switch tabs, the execution will be terminated.</h2>
+                <p>You can open <a href="#" target="_blank" tabindex="-1">another browser window</a> to read the description in parallel.</p>
+            </div>
+        </div>
+
+        <!-- TAB description of algorithm -->
+        <div id="tab_ti" style="display: none;">
+            <div>
+                <h1>Matching on bipartite Graphs</h1>
+                <h1>What's next?</h1>
+                <br style="clear: both;" />
+                <div>
+                    <h3>Create a graph and run the algorithm</h3>
+                    <button id="ti_button_gotoDrawGraph">Create a graph and run the algorithm on it</button>
+                    <button id="ti_button_gotoAlgorithm">Run the algorithm on a prepared graph</button>
+                </div>
+                <br style="clear: both;" />
+            </div>
+        </div>
+
+        <!-- Tab Exercise 1 -->
+        <div id="tab_tf1">
+            <div>
+                <div class="canvasWrapper">
+                    <div class="svgContainer">
+                    <svg class="graphCanvas" id="tf1_canvas_graph" width="700" height="450"></svg>
+                    </div>
+                    <a class="svgDownloader" download="graph-algorithm.svg" href="data:text/plain,test">SVG Download</a>
+                </div>
+            </div>
+        </div>
+
+       
+        <!-- TAB Weiteres -->
+        <div id="tab_tw" style="display: none;">
+            <div id="tw_Accordion">
+                <h3>What's the (Pseudo-)Code of the algorithm?</h3>
+                <div><pre><code>
+                Input: Bipartite unweighted Graph G=(U &cup; V, E)
+                Output: Matching M &sube; E
+                    BEGIN
+                      M := &empty;
+                      REPEAT
+                        l := length of the shortest augmenting paths
+                        &Rho; := {P1,...,Pk} inklusion-maximal set of
+                             vertex-dijunct augmenting pathsl of length l
+                        M := M &oplus; (P1 &cup; P2 &cup; ... &cup; Pk)
+                      UNTIL &Rho; = &empty;
+                      RETURN M
+                    END
+                </code></pre></div>
+          </div>
+        </div>
+    </div>
+    </div>
+</body>

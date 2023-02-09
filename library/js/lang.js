@@ -31,6 +31,7 @@ var LNG = (function () {
 
     _LNG.prototype = {
         K: function (key) {
+            return key
             var obj = config[this.getLanguage()],
                 result;
 
