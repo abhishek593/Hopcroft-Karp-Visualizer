@@ -58,7 +58,7 @@
     <title>The Hopcroft-Karp Algorithm</title>
 </head>
 
-<body>
+<body style="transform-origin: left top;transform: scale(1.4555);">
     <noscript>
         <div class="ui-widget">
             <div class="ui-state-error ui-corner-all" style="padding: .7em;">
@@ -69,7 +69,8 @@
                         This website needs Javascript in order to be displayed properly.
                     </li>
                     <li>
-                        Javascript is currently deactivated in your browser. A manual for the activation of Javascript can be found <a href="http://www.enable-javascript.com/">here</a>.
+                        Javascript is currently deactivated in your browser. A manual for the activation of Javascript
+                        can be found <a href="http://www.enable-javascript.com/">here</a>.
                     </li>
                 </ul>
             </div>
@@ -255,7 +256,7 @@
                         <select name="graphSelector" id="tg_select_GraphSelector">
                             <option selected=true label="Random Graph">Random Graph</option>
                             <option label="Standard Example">Create Graph</option>
-                            
+
                         </select>
 
                         <h3>Modify it to your desire:<br></h3>
@@ -311,24 +312,31 @@
                             <h2 class="LegendeHeader"><button class="LegendeMin"></button> Legend</h2>
                         </div>
                     </div>
-                    <div id="ta_div_statusWindow" class="statusWindow">
-                        <h2 class="">Running Algorithm</h2>
-                        <div id="ta_div_abspielbuttons"> <!--class="ui-widget-header ui-corner-all"-->
+                    <div id="ta_div_statusWindow" class="statusWindow" style="border-color: black;">
+                        <br>
+                        <h1 class="" style="color: black;">Running Algorithm</h1>
+                        <br>
+                        <br>
+                        <br>
+                        <div id="ta_div_abspielbuttons">
+                            <!--class="ui-widget-header ui-corner-all"-->
                             <input id="ta_button_rewind" type="checkbox"><label for="ta_button_rewind"
                                 id="ta_button_text_rewind">rewind</label>
 
-                            <button id="ta_button_Zurueck">prev</button>
+                            <button id="ta_button_Zurueck" style="width: 165px;padding: 10px;">prev</button>
 
-                            <button id="ta_button_1Schritt">next</button>
+                            <button id="ta_button_1Schritt" style="width: 165px;padding: 10px;">next</button>
+                            <p></p>
 
                             <input id="ta_button_vorspulen" type="checkbox"><label for="ta_button_vorspulen"
-                                id="ta_button_text_fastforward">fast forward</label>
+                                id="ta_button_text_fastforward" style="width: 165px;padding: 10px;">fast
+                                forward</label>
 
                             <!-- <input type="number" id="ta_vorspulen_speed" min="2" max="500" value=5>ms -->
 
                             <span id="ta_button_text_pause" style="display:none">pause</span>
                         </div>
-                        <div id="ta_div_statusTabs">
+                        <div style="visibility: hidden;" id="ta_div_statusTabs">
                             <ul>
                                 <li><a href="#ta_div_statusErklaerung">Explanation</a></li>
                                 <li><a href="#ta_div_statusPseudocode">Pseudocode</a></li>
