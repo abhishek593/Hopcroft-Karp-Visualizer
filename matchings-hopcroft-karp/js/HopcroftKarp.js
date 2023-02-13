@@ -404,6 +404,8 @@ function HopcroftKarp(svgSelection) {
                 var nnode = Graph.instance.addBFSNode(posX + (c++)*shiftX, posY - l*shiftY,[]);
                 stored_bfs_levels.push(nnode.id);
                 mtoBFS[nid] = nnode.id;
+                // set text to corressponding value 
+                nnode.text = nid;
             }
             l++;
         }

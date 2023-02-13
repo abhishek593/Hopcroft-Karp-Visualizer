@@ -51,6 +51,7 @@ Graph.Node = function(x,y,id){
   this.x=x;
   this.y=y;
   this.id=id;
+  this.text=id;
   this.resources = [];
   
   this.outEdges = d3.map();

@@ -191,6 +191,17 @@ var GraphDrawer = function(svgOrigin,extraMargin,transTime){
                 .style("stroke-width",global_NodeLayout['borderWidth'])
                 .style("stroke",global_NodeLayout['borderColor'])
 
+            enterSelection.append("text")
+                .attr("class","label unselectable")
+                .attr("dy", ".35em")           // set offset y position
+                .attr("text-anchor", "middle")
+
+            enterSelection.append("text")
+                .attr("class","resource unselectable")
+                .attr("dy",-global_KnotenRadius+"px")           // set offset y position
+                .attr("text-anchor", "middle")
+
+
         // ENTER + UPDATE
         // Appending to the enter selection expands the update selection to include
         // entering elements; so, operations on the update selection after appending to
@@ -207,10 +218,11 @@ var GraphDrawer = function(svgOrigin,extraMargin,transTime){
             }
 
             selection.selectAll("text.label")
-                 .text(this.nodeLabel);
+                    .text(this.nodeText)
+                //  .text(this.nodeLabel);
 
-            selection.selectAll("text.resource")
-                .text(this.nodeText);
+            // selection.selectAll("text.resource")
+            //     .text(this.nodeText);
 
 
         // EXIT
@@ -296,7 +308,7 @@ GraphDrawer.prototype.edgeText = function(d){
 }
 
 GraphDrawer.prototype.nodeText = function(d){
-    return d.toString();   
+    return d.text.toString();   
 }
 
 GraphDrawer.prototype.nodeLabel = function(d){
