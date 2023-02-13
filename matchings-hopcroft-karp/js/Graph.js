@@ -343,6 +343,7 @@ Graph.Edge.prototype.contains = function(mx,my,ctx) {
         for(var i = 0, toAdd = this.getNodeResourcesSize() - node.resources.length; i<toAdd; i++){
             node.resources.push(0);
         }
+        node.state.color = 'silver';
         this.nodes.set(node.id,node);
         return node;
     };
