@@ -58,7 +58,7 @@
     <title>The Hopcroft-Karp Algorithm</title>
 </head>
 
-<body style="transform-origin: left top;transform: scale(1.4555);">
+<body>
     <noscript>
         <div class="ui-widget">
             <div class="ui-state-error ui-corner-all" style="padding: .7em;">
@@ -100,13 +100,12 @@
 
         <header>
             <div class="jumbotron text-center">
-                <h1 class="display-4"
-                    style="color:black;  font-weight: 1; font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';">
-                    Hopcroft Karp Algorithm</h1>
+                <h1 class="display-8"
+                    style="text-align:center; color:black;  font-weight: 1; font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';">Hopcroft Karp Algorithm</h1>
             </div>
         </header>
 
-        <div id="tabs">
+        <div id="tabs" >
             <ul style="visibility: hidden;">
                 <li><a href="#tab_te"><span>Introduction</span></a></li>
                 <li><a href="#tab_tg"><span>Create a Graph</span></a></li>
@@ -182,12 +181,12 @@
                     </div>
                 </div>
                 <div id="te_div_Einfuehrungstext">
-                    <div id="te_div_beispiel1Container"><img id="te_img_beispiel1" src="img/bipartite_graph.png"
+                    <div id="te_div_beispiel1Container" style="max-height: 0"><img id="te_img_beispiel1" src="img/bipartite_graph.png"
                             alt="Bipartiter Graph">
                         <p>How big is the maximal matching?</p>
                     </div>
-                    <h1>Bipartite Matching</h1>
-                    <p>
+                    <h1 style="max-height: 0">Bipartite Matching</h1>
+                    <p style="max-height: 0">
                         One possible application for the bipartite matching problem is allocating students to
                         available
                         jobs. The problem can be modeled using a bipartite graph:
@@ -198,7 +197,7 @@
                         take
                         one job and each job can only be performed by a single student.
                     </p>
-                    <p>
+                    <p style="max-height: 0">
                         Let \( G=(V,E)\) be a given undirected graph. A subset \(M \subseteq E\) is called a
                         matching,
                         if no two edges in M share a node.
@@ -209,12 +208,12 @@
                         Whenever there are exactly two such classes, the problem is called <strong>bipartite
                             matching</strong>.
                     </p>
-                    <h2>Here we demonstrate the Hopcroft-Karp algorithm that solves the problem of finding maximal
+                    <h2 style="max-height: 0">Here we demonstrate the Hopcroft-Karp algorithm that solves the problem of finding maximal
                         matchings on bipartite graphs.</h2>
                     <div id="te_div_Entscheidung">
-                        <h2>What do you want to do first?</h2>
-                        <button id="te_button_gotoDrawGraph" class="btn btn-light" style="visibility: visible;">Test the
-                            algorithm!</button> <button id="te_button_gotoIdee">Read detailed description of the
+                        <h2 style="max-height: 0">What do you want to do first?</h2>
+                        <button id="te_button_gotoDrawGraph" class="btn btn-light" style="visibility: visible; padding: 10px; font-size:medium; background-color: rgb(193, 193, 193); color: Black">Test the
+                            Algorithm!</button> <button id="te_button_gotoIdee">Read detailed description of the
                             algorithm</button>
                     </div>
                 </div>
@@ -222,13 +221,13 @@
 
             <!-- TAB Graph editor -->
             <div id="tab_tg">
-                <div>
+                <div class="aligningClass">
                     <div class="canvasWrapper">
                         <div class="svgContainer"><svg class="graphCanvas" id="tg_canvas_graph" width="700"
                                 height="1000"></svg></div>
                         <a class="svgDownloader" download="graph-editor.svg" href="data:text/plain,test">SVG
                             Download</a>
-                        <div style="visibility: hidden;" class="Legende" id="tg_div_Legende">
+                        <div style="visibility: hidden; max-height: 0;" class="Legende" id="tg_div_Legende">
                             <h2 class="LegendeHeader"><button class="LegendeMin"></button> Legend</h2>
                             <div class="LegendeText">
                                 <table>
@@ -245,23 +244,25 @@
                                 </table>
                             </div>
                         </div>
-                        <div style="visibility: hidden;" class="LegendeMinimized">
+                        <div style="visibility: hidden; max-height: 0;" class="LegendeMinimized">
                             <h2 class="LegendeHeader"><button class="LegendeMin"></button> Legend</h2>
                         </div>
                     </div>
                     <div id="tg_div_statusWindow" class="statusWindow">
                         <br>
-                        <label for="graphSelector">Select </label>
+                        <label for="graphSelector" style="padding: 0 10%; margin: 0 5%; text-transform:uppercase; font-size: 0.8rem">Select</label>
                         <!-- add own graph examples here: -->
-                        <select name="graphSelector" id="tg_select_GraphSelector">
+                        <select name="graphSelector" id="tg_select_GraphSelector" style="width: 50%; height:10%;">
                             <option selected=true label="Random Graph">Random Graph</option>
-                            <option label="Standard Example">Create Graph</option>
+                            <option label="Create Graph">Create Graph</option>
 
                         </select>
-
-                        <h3>Modify it to your desire:<br></h3>
+                        <br>
+                        <br>
+                        <br>
+                        <h3 style="color:black;  font-weight: 400; font-family: 'arial'; padding: 2% 5%">Modify it to your desire:<br></h3>
                         <div id="tg_div_statusErklaerung">
-                            <ul>
+                            <ul style="color:black;  font-weight: 400; font-family: 'Arial'; margin-left: -5%">
                                 <li>The graph consists of two sets of vertices and edges between these sets.
                                 </li>
                                 <li>To create a vertex in one of the sets, double click in the area of that set.
@@ -275,7 +276,7 @@
                                 <li>Right clicking will delete vertices and edges.</li>
                             </ul>
                         </div>
-                        <p><button id="tg_button_gotoAlgorithmTab">Ready &ndash; Run the Algorithm!</button></p>
+                        <p><button id="tg_button_gotoAlgorithmTab" style="margin: 15%; padding: 10px; font-size:medium; background-color: black; color: Black">Run the Algorithm!</button></p>
 
 
                     </div>
@@ -284,14 +285,14 @@
 
             <!-- TAB run algorithm -->
             <div id="tab_ta">
-                <div>
+                <div class="aligningClass">
                     <div class="canvasWrapper">
                         <div class="svgContainer">
                             <svg class="graphCanvas" id="ta_canvas_graph" width="700" height="1000"></svg>
                         </div>
                         <a class="svgDownloader" download="graph-algorithm.svg" href="data:text/plain,test">SVG
                             Download</a>
-                        <div style="visibility: hidden;" class="Legende">
+                        <div style="visibility: hidden; max-height: 0;" class="Legende">
                             <h2 class="LegendeHeader"><button class="LegendeMin"></button> Legend</h2>
                             <div class="LegendeText">
                                 <table>
@@ -308,11 +309,11 @@
                                 </table>
                             </div>
                         </div>
-                        <div style="visibility: hidden;" class="LegendeMinimized">
+                        <div style="visibility: hidden; max-height: 0;" class="LegendeMinimized">
                             <h2 class="LegendeHeader"><button class="LegendeMin"></button> Legend</h2>
                         </div>
                     </div>
-                    <div id="ta_div_statusWindow" class="statusWindow" style="border-color: black;">
+                    <div id="ta_div_statusWindow" class="statusWindow" style="border-color: black; ">
                         <br>
                         <h1 class="" style="color: black;">Running Algorithm</h1>
                         <br>
@@ -323,20 +324,20 @@
                             <input id="ta_button_rewind" type="checkbox"><label for="ta_button_rewind"
                                 id="ta_button_text_rewind">rewind</label>
 
-                            <button id="ta_button_Zurueck" style="width: 165px;padding: 10px;">prev</button>
+                            <button id="ta_button_Zurueck" style="width: 165px;padding: 10px; font-size:small; background-color: rgb(193, 193, 193); color: Black">Prev</button>
 
-                            <button id="ta_button_1Schritt" style="width: 165px;padding: 10px;">next</button>
+                            <button id="ta_button_1Schritt" style="width: 165px;padding: 10px; font-size:small; background-color: rgb(193, 193, 193); color: Black">Next</button>
                             <p></p>
 
                             <input id="ta_button_vorspulen" type="checkbox"><label for="ta_button_vorspulen"
-                                id="ta_button_text_fastforward" style="width: 165px;padding: 10px;">fast
-                                forward</label>
+                                id="ta_button_text_fastforward" style="width: 165px;padding: 10px; font-size:small; background-color: rgb(193, 193, 193); color: Black">Fast
+                                Forward</label>
 
                             <!-- <input type="number" id="ta_vorspulen_speed" min="2" max="500" value=5>ms -->
 
                             <span id="ta_button_text_pause" style="display:none">pause</span>
                         </div>
-                        <div style="visibility: hidden;" id="ta_div_statusTabs">
+                        <div style="visibility: hidden; max-height: 0;" id="ta_div_statusTabs">
                             <ul>
                                 <li><a href="#ta_div_statusErklaerung">Explanation</a></li>
                                 <li><a href="#ta_div_statusPseudocode">Pseudocode</a></li>
@@ -405,7 +406,7 @@
 
             <!-- Tab Exercise 1 -->
             <div id="tab_tf1">
-                <div>
+                <div class="aligningClass">
                     <div class="canvasWrapper">
                         <div class="svgContainer">
                             <svg class="graphCanvas" id="tf1_canvas_graph" width="700" height="450"></svg>
