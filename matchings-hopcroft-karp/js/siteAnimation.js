@@ -18,6 +18,7 @@ function svgHack(){
                 
 //                 parent.append("p").text("test");
                 parent.insert("span","img").html(text);
+                console.log(text)
                 var newSVGElem = parent.select("span").select("svg");
 
                 newSVGElem.attr("class","svgText");

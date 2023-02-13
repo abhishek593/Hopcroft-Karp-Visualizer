@@ -111,6 +111,12 @@ function HopcroftKarp(svgSelection) {
      */
     var bfs_edges = null;
     var stored_bfs_edges = null;
+
+    /**
+     * Storing all disjoint paths
+     * @type {array}
+     */
+    var allDisjointPaths = null;
     
     /*
     * Alle benoetigten Information zur Wiederherstellung der vorangegangenen Schritte werden hier gespeichert.
@@ -361,6 +367,20 @@ function HopcroftKarp(svgSelection) {
     };
 
 
+    var highlightDjNode = function(node){
+        node.state.strokeColor = "gold";
+        node.state.color = "orange";
+        node.state.strokeWidth = global_NodeLayout.borderWidth*1.5;
+    };
+    var highlightDjEdge = function(edge){
+        edge.state.color = "SlateBlue";
+        edge.state.width = global_Edgelayout.lineWidth*2.0;
+    };
+    var highlightFreeDjNode = function(node){
+        node.state.strokeWidth = global_NodeLayout.borderWidth * 2;
+        node.state.color = "SteelBlue";
+    };
+
     /*
     * Updating the $$BFStree
     * @method -- to implement
@@ -371,8 +391,9 @@ function HopcroftKarp(svgSelection) {
         var posX = 100;
         var posY = 400;
         var shiftX = 50;
-        var shiftY = 50;
+        var shiftY = 100;
         var mtoBFS = new Object();
+        var etoBFS = new Object();
         stored_bfs_levels = [];
         stored_bfs_edges = [];
         for(var n in bfs_levels){
@@ -392,12 +413,31 @@ function HopcroftKarp(svgSelection) {
             edge = bfs_edges[e];
             var nedge = Graph.instance.addBFSEdge(mtoBFS[edge[0]], mtoBFS[edge[1]], edid++);
             stored_bfs_edges.push(nedge.id);
+            etoBFS[edge.id] = nedge.id;
+            if (allDisjointPaths[[edge[0], edge[1]]] === 1) {
+                highlightDjNode(Graph.instance.nodes.get(mtoBFS[edge[0]]));
+                highlightDjNode(Graph.instance.nodes.get(mtoBFS[edge[1]]));
+                highlightDjEdge(nedge);
+            }
         }
+
+        // for(var nepath in allDisjointPaths) {
+        //     for(var n = 0; n < nepath.length; n=n+2){
+        //         var node = nepath[n];
+        //         highlightNode(node);
+        //         if(n < nepath.length - 1){
+        //             var edge = nepath[n+1];
+        //             highlightEdge(edge);
+        //         }
+        //     }
+        //     highlightFreeNode(nepath[0]);
+        //     highlightFreeNode(nepath[nepath.length-1]);
+        // }
+        
 
         this.update();
         
         // work on this function
-        console.log('reached here')
         s.id = NEXT_AUGMENTING_PATH;
         $(statusErklaerung).html('<h3>'+iteration+'. '+LNG.K('textdb_text_iteration')+'</h3>'
             + "<h3> "+LNG.K('textdb_msg_begin_it')+"</h3>"
@@ -482,6 +522,7 @@ function HopcroftKarp(svgSelection) {
         // save history here
         stored_bfs_edges = {};
         stored_bfs_levels = {};
+        allDisjointPaths = {};
     }
 
     /*
@@ -686,7 +727,15 @@ function HopcroftKarp(svgSelection) {
         dfs(superNode);
 
         // console.log(matching)
-        // console.log(disjointPaths)
+
+        for (var ne in disjointPaths) {
+            var nepath = disjointPaths[ne];
+            for (let n = 0; n+2 < nepath.length; n += 2) {
+                var node1 = nepath[n];
+                var node2 = nepath[n+2];
+                allDisjointPaths[[node1.id, node2.id]] = 1;
+            }
+        }
 
         //restore Layouts 
         Graph.instance.nodes.forEach( function(nodeID, node) {

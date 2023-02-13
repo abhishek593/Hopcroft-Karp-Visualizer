@@ -206,11 +206,11 @@ var GraphDrawer = function(svgOrigin,extraMargin,transTime){
                 .call(this.onNodesUpdated);
             }
 
-            /*selection.selectAll("text.label")
+            selection.selectAll("text.label")
                  .text(this.nodeLabel);
 
             selection.selectAll("text.resource")
-                .text(this.nodeText);*/
+                .text(this.nodeText);
 
 
         // EXIT
