@@ -98,7 +98,7 @@ p.frage {
 
 div.statusWindow {
     text-align: center;
-    margin-left: 717px;
+    margin-left: 55%;
     width: 370px;
     min-height: 500px;
     max-height: 500px;
@@ -237,8 +237,13 @@ table.algoInformationen {
 
 #tabs li .ui-icon-refresh { float: right; margin: 0.4em 0.2em 0 0; cursor: pointer; }
 #tabs { 
-    min-width: 1155px;
-    max-width: 1155px;
+    /* min-width: 1155px;
+    max-width: 1155px; */
+    font-size: 1rem;
+}
+
+.aligningClass{
+    margin-left: 18%;
 }
 
 .marked {
@@ -295,10 +300,11 @@ table.algoInformationen {
 #te_div_Entscheidung {
     padding-top: 30px;
     text-align: center;
+    margin-left: 65%;
 }
 
 #te_button_gotoDrawGraph {
-    width: 320px;
+    width: fit-content;
 }
 
 #te_button_gotoIdee {
@@ -379,7 +385,7 @@ ul.subtourList li {
 }
 
 body {
-    max-width: 1160px;
+    /* max-width: 1160px; */
     margin-left: auto;
     margin-right: auto;
 }
